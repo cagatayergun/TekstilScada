@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Avalonia">
+    <AvaloniaNameGeneratorIsEnabled>False</AvaloniaNameGeneratorIsEnabled>
+    <AvaloniaNameGeneratorAttachDevTools>False</AvaloniaNameGeneratorAttachDevTools>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="HslCommunication" Version="12.3.2" />
+    <PackageReference Include="MySql.Data" Version="9.3.0" />
+    <PackageReference Include="ScottPlot.WinForms" Version="5.0.55" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="VncSharpCore">
+      <HintPath>..\..\..\Downloads\VncSharpCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
