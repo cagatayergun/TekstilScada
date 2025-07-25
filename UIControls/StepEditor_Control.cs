@@ -1,6 +1,7 @@
 ﻿// UI/Controls/RecipeStepEditors/StepEditor_Control.cs
 using System;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Windows.Forms;
 using TekstilScada.Models;
 
@@ -11,7 +12,7 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
         private ScadaRecipeStep _step;
         public event EventHandler StepDataChanged;
         private bool _isUpdating = false; // Programatik değişikliklerde olayların tekrar tetiklenmesini önlemek için
-
+        private TekstilScada.Models.Machine _machine; // YENİ: Hangi makine için çalıştığını bilmeli
         public StepEditor_Control()
         {
             InitializeComponent();
@@ -22,11 +23,13 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
             chkDozaj.CheckedChanged += OnStepTypeChanged;
             chkBosaltma.CheckedChanged += OnStepTypeChanged;
             chkSikma.CheckedChanged += OnStepTypeChanged;
+
         }
 
-        public void LoadStep(ScadaRecipeStep step)
+        public void LoadStep(ScadaRecipeStep step, TekstilScada.Models.Machine machine)
         {
             _step = step;
+            _machine = machine; // Makine bilgisini sakla
             _isUpdating = true; // Yükleme sırasında olayları durdur
             UpdateCheckboxesFromStepData();
             _isUpdating = false; // Yükleme bitti, olayları serbest bırak
@@ -127,11 +130,38 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
             }
             if (chkDozaj.Checked)
             {
-                var editor = new DozajEditor_Control();
-                editor.LoadStep(_step);
-                editor.ValueChanged += (s, ev) => StepDataChanged?.Invoke(this, EventArgs.Empty);
-                editor.Dock = DockStyle.Top;
-                pnlParameters.Controls.Add(editor);
+                pnlParameters.Controls.Clear();
+                if (_machine == null) return; // Makine seçilmemişse hiçbir şey yapma
+
+                // Hangi CheckBox işaretliyse, makine alt tipine göre ilgili editörü yükle
+                if (chkDozaj.Checked)
+                {
+                    // MAKİNE ALT TİPİNE GÖRE EDİTÖR SEÇİMİ
+                    if (_machine.MachineSubType?.ToUpper() == "BOYAMA")
+                    {
+                        var editor = new DozajEditor_Boyama_Control(); // Detaylı editör
+                        editor.LoadStep(_step);
+                        editor.ValueChanged += (s, ev) => StepDataChanged?.Invoke(this, EventArgs.Empty);
+                        editor.Dock = DockStyle.Top;
+                        pnlParameters.Controls.Add(editor);
+                    }
+                    else if (_machine.MachineSubType?.ToUpper() == "YIKAMA")
+                    {
+                        var editor = new DozajEditor_Yikama_Control(); // Basit editör
+                        editor.LoadStep(_step);
+                        editor.ValueChanged += (s, ev) => StepDataChanged?.Invoke(this, EventArgs.Empty);
+                        editor.Dock = DockStyle.Top;
+                        pnlParameters.Controls.Add(editor);
+                    }
+                    else // Alt tip belirtilmemişse veya eşleşmiyorsa, varsayılanı yükle
+                    {
+                        var editor = new DozajEditor_Control(); // Orijinal, varsayılan editör
+                        editor.LoadStep(_step);
+                        editor.ValueChanged += (s, ev) => StepDataChanged?.Invoke(this, EventArgs.Empty);
+                        editor.Dock = DockStyle.Top;
+                        pnlParameters.Controls.Add(editor);
+                    }
+                }
             }
             if (chkBosaltma.Checked)
             {

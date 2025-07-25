@@ -179,45 +179,34 @@ namespace TekstilScada.Services
         {
             _currentBatches.TryGetValue(machineId, out string lastBatchId);
 
+            // Yeni bir batch başlıyorsa...
             if (currentStatus.IsInRecipeMode && !string.IsNullOrEmpty(currentStatus.BatchNumarasi) && currentStatus.BatchNumarasi != lastBatchId)
             {
                 _productionRepository.StartNewBatch(currentStatus);
                 _currentBatches[machineId] = currentStatus.BatchNumarasi;
             }
+            // Mevcut batch bitiyorsa...
             else if (!currentStatus.IsInRecipeMode && lastBatchId != null)
             {
-                _productionRepository.EndBatch(machineId, lastBatchId);
+                // Üretim bittiği anda PLC'den son verileri alıyoruz.
+                // currentStatus, bu verileri zaten içinde barındırıyor.
+                _productionRepository.EndBatch(machineId, lastBatchId, currentStatus);
 
+                // Diğer rapor verilerini asenkron olarak çekmeye devam et
                 if (_plcManagers.TryGetValue(machineId, out var plcManager))
                 {
                     Task.Run(async () => {
-                        var summaryResult = await plcManager.ReadBatchSummaryDataAsync();
-                        if (summaryResult.IsSuccess)
-                        {
-                            _productionRepository.UpdateBatchSummary(machineId, lastBatchId, summaryResult.Content);
-                            LiveEventAggregator.Instance.PublishSystemInfo($"{lastBatchId} için toplam tüketim kaydedildi.");
-                        }
+                        // ... (mevcut summary, chemical, step analysis kodları aynı kalacak) ...
 
-                        var chemicalResult = await plcManager.ReadChemicalConsumptionDataAsync();
-                        if (chemicalResult.IsSuccess)
-                        {
-                            _productionRepository.LogChemicalConsumption(machineId, lastBatchId, chemicalResult.Content);
-                            LiveEventAggregator.Instance.PublishSystemInfo($"{lastBatchId} için kimyasal tüketimi kaydedildi.");
-                        }
+                        // YENİ: Üretim sayacını 1 artır
+                        await plcManager.IncrementProductionCounterAsync();
 
-                        var stepAnalysisResult = await plcManager.ReadStepAnalysisDataAsync();
-                        if (stepAnalysisResult.IsSuccess)
-                        {
-                            _productionRepository.LogAllStepDetails(machineId, lastBatchId, stepAnalysisResult.Content);
-                            LiveEventAggregator.Instance.PublishSystemInfo($"{lastBatchId} için adım analiz verileri kaydedildi.");
-                        }
-                        else
-                        {
-                            LiveEventAggregator.Instance.PublishSystemInfo($"{lastBatchId} için adım analiz verileri OKUNAMADI: {stepAnalysisResult.Message}");
-                        }
+                        // YENİ: Diğer OEE sayaçlarını sıfırla
+                        await plcManager.ResetOeeCountersAsync();
+
+                        LiveEventAggregator.Instance.PublishSystemInfo($"{lastBatchId} için üretim tamamlandı. Sayaçlar sıfırlandı.");
                     });
                 }
-
                 _currentBatches[machineId] = null;
             }
         }

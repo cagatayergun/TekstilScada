@@ -41,7 +41,11 @@ namespace TekstilScada.Models
         public short BuharHarcama { get; set; }
 
         // Aktif Adım Bilgileri
-     
+        public bool IsMachineInProduction { get; set; } // M2501
+        public int TotalDownTimeSeconds { get; set; }     // D7764
+        public short StandardCycleTimeMinutes { get; set; } // D6411
+        public short TotalProductionCount { get; set; }   // D7768
+        public short DefectiveProductionCount { get; set; } // D7770
     }
 
     public enum ConnectionStatus

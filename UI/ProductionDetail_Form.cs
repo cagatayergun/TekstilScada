@@ -15,14 +15,16 @@ namespace TekstilScada.UI
         private readonly ProductionRepository _productionRepo;
         private readonly ProcessLogRepository _processLogRepo;
         private readonly AlarmRepository _alarmRepo; // Alarmlar için eklendi
+        private readonly RecipeRepository _recipeRepository; // YENİ
 
-        public ProductionDetail_Form(ProductionReportItem reportItem)
+        public ProductionDetail_Form(ProductionReportItem reportItem, RecipeRepository recipeRepo, ProcessLogRepository processLogRepo, AlarmRepository alarmRepo)
         {
             InitializeComponent();
             _reportItem = reportItem;
             _productionRepo = new ProductionRepository();
-            _processLogRepo = new ProcessLogRepository();
-            _alarmRepo = new AlarmRepository();
+            _processLogRepo = processLogRepo;
+            _alarmRepo = alarmRepo;
+            _recipeRepository = recipeRepo;
         }
 
         private void ProductionDetail_Form_Load(object sender, EventArgs e)
@@ -64,10 +66,27 @@ namespace TekstilScada.UI
                 var tempPlot = formsPlot1.Plot.Add.Scatter(timeData, tempData);
                 tempPlot.Color = ScottPlot.Colors.Red;
                 tempPlot.LegendText = "Sıcaklık";
+                // 2. YENİ: Teorik Veri Grafiğini Çiz
+                var recipe = _recipeRepository.GetAllRecipes().FirstOrDefault(r => r.RecipeName == _reportItem.RecipeName);
+                if (recipe != null)
+                {
+                    var fullRecipe = _recipeRepository.GetRecipeById(recipe.Id);
+                    // RampCalculator'ı kullanarak teorik veriyi oluştur
+                    var (theoTimestamps, theoTemperatures) = RampCalculator.GenerateTheoreticalRamp(fullRecipe, _reportItem.StartTime);
+
+                    if (theoTimestamps.Any())
+                    {
+                        var theoPlot = formsPlot1.Plot.Add.Scatter(theoTimestamps, theoTemperatures);
+                        theoPlot.Color = ScottPlot.Colors.Blue;
+                        theoPlot.LegendText = "Teorik Sıcaklık";
+                        theoPlot.LineStyle.Pattern = ScottPlot.LinePattern.Dashed;
+                        theoPlot.LineWidth = 2;
+                    }
+                }
 
                 formsPlot1.Plot.Axes.DateTimeTicksBottom();
-                formsPlot1.Plot.Title("Sıcaklık Grafiği");
-                formsPlot1.Plot.ShowLegend();
+                formsPlot1.Plot.Title($"{_reportItem.MachineName} - Proses Grafiği");
+                formsPlot1.Plot.ShowLegend(ScottPlot.Alignment.UpperLeft);
                 formsPlot1.Plot.Axes.AutoScale();
                 formsPlot1.Refresh();
             }

@@ -58,8 +58,8 @@ namespace TekstilScada.UI.Views
             // 
             splitContainer1.Panel2.Controls.Add(pnlEditorArea);
             splitContainer1.Panel2.Controls.Add(panel2);
-            splitContainer1.Size = new Size(1003, 448);
-            splitContainer1.SplitterDistance = 250;
+            splitContainer1.Size = new Size(939, 448);
+            splitContainer1.SplitterDistance = 234;
             splitContainer1.TabIndex = 0;
             // 
             // lstRecipes
@@ -70,7 +70,7 @@ namespace TekstilScada.UI.Views
             lstRecipes.Location = new Point(0, 22);
             lstRecipes.Margin = new Padding(3, 2, 3, 2);
             lstRecipes.Name = "lstRecipes";
-            lstRecipes.Size = new Size(250, 388);
+            lstRecipes.Size = new Size(234, 388);
             lstRecipes.TabIndex = 1;
             // 
             // panel1
@@ -81,7 +81,7 @@ namespace TekstilScada.UI.Views
             panel1.Location = new Point(0, 410);
             panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(250, 38);
+            panel1.Size = new Size(234, 38);
             panel1.TabIndex = 2;
             // 
             // btnDeleteRecipe
@@ -110,7 +110,7 @@ namespace TekstilScada.UI.Views
             label1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(250, 22);
+            label1.Size = new Size(234, 22);
             label1.TabIndex = 0;
             label1.Text = "Kayıtlı Reçeteler";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -121,7 +121,7 @@ namespace TekstilScada.UI.Views
             pnlEditorArea.Location = new Point(0, 60);
             pnlEditorArea.Margin = new Padding(3, 2, 3, 2);
             pnlEditorArea.Name = "pnlEditorArea";
-            pnlEditorArea.Size = new Size(749, 388);
+            pnlEditorArea.Size = new Size(701, 388);
             pnlEditorArea.TabIndex = 1;
             // 
             // panel2
@@ -138,7 +138,7 @@ namespace TekstilScada.UI.Views
             panel2.Location = new Point(0, 0);
             panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(749, 60);
+            panel2.Size = new Size(701, 60);
             panel2.TabIndex = 0;
             // 
             // btnFtpSync
@@ -229,7 +229,7 @@ namespace TekstilScada.UI.Views
             Controls.Add(splitContainer1);
             Margin = new Padding(3, 2, 3, 2);
             Name = "ProsesKontrol_Control";
-            Size = new Size(1003, 448);
+            Size = new Size(939, 448);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();

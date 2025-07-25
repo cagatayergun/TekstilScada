@@ -1,6 +1,7 @@
 ﻿// UI/Views/MachineSettings_Control.cs
 using System;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 using System.Windows.Forms;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
@@ -12,8 +13,8 @@ namespace TekstilScada.UI.Views
         public event EventHandler MachineListChanged;
 
         private readonly MachineRepository _repository;
-        private List<Machine> _machines;
-        private Machine _selectedMachine;
+        private List<TekstilScada.Models.Machine> _machines;
+        private TekstilScada.Models.Machine _selectedMachine;
 
         public MachineSettings_Control()
         {
@@ -52,7 +53,7 @@ namespace TekstilScada.UI.Views
         {
             if (dgvMachines.SelectedRows.Count > 0)
             {
-                _selectedMachine = dgvMachines.SelectedRows[0].DataBoundItem as Machine;
+                _selectedMachine = dgvMachines.SelectedRows[0].DataBoundItem as TekstilScada.Models.Machine;
                 if (_selectedMachine != null)
                 {
                     PopulateFields(_selectedMachine);
@@ -60,7 +61,7 @@ namespace TekstilScada.UI.Views
             }
         }
 
-        private void PopulateFields(Machine machine)
+        private void PopulateFields(TekstilScada.Models.Machine machine)
         {
             txtMachineId.Text = machine.MachineUserDefinedId;
             txtMachineName.Text = machine.MachineName;
@@ -72,6 +73,7 @@ namespace TekstilScada.UI.Views
             // YENİ: FTP alanlarını doldur
             txtFtpUsername.Text = machine.FtpUsername;
             txtFtpPassword.Text = machine.FtpPassword;
+            txtMachineSubType.Text = machine.MachineSubType;
         }
 
         private void ClearFields()
@@ -88,6 +90,7 @@ namespace TekstilScada.UI.Views
             // YENİ: FTP alanlarını temizle
             txtFtpUsername.Text = "";
             txtFtpPassword.Text = "";
+            txtMachineSubType.Text = "";
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -97,7 +100,7 @@ namespace TekstilScada.UI.Views
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtMachineId.Text) || string.IsNullOrWhiteSpace(txtIpAddress.Text))
+            if (string.IsNullOrWhiteSpace(txtMachineId.Text) || string.IsNullOrWhiteSpace(txtIpAddress.Text) || string.IsNullOrWhiteSpace(txtMachineSubType.Text))
             {
                 MessageBox.Show("Makine ID ve IP Adresi alanları zorunludur.", "Eksik Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -107,7 +110,7 @@ namespace TekstilScada.UI.Views
             {
                 if (_selectedMachine == null) // Yeni Kayıt
                 {
-                    var newMachine = new Machine
+                    var newMachine = new TekstilScada.Models.Machine
                     {
                         MachineUserDefinedId = txtMachineId.Text,
                         MachineName = txtMachineName.Text,
@@ -118,8 +121,9 @@ namespace TekstilScada.UI.Views
                         MachineType = cmbMachineType.SelectedItem.ToString(),
                         // YENİ: FTP alanlarını oku
                         FtpUsername = txtFtpUsername.Text,
-                        FtpPassword = txtFtpPassword.Text
-                    };
+                        FtpPassword = txtFtpPassword.Text,
+                        MachineSubType = txtMachineSubType.Text
+                    }; 
                     _repository.AddMachine(newMachine);
                     MessageBox.Show("Yeni makine başarıyla eklendi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -135,7 +139,9 @@ namespace TekstilScada.UI.Views
                     // YENİ: FTP alanlarını oku
                     _selectedMachine.FtpUsername = txtFtpUsername.Text;
                     _selectedMachine.FtpPassword = txtFtpPassword.Text;
+                    _selectedMachine.MachineSubType = txtMachineSubType.Text;
                     _repository.UpdateMachine(_selectedMachine);
+                  
                     MessageBox.Show("Makine bilgileri başarıyla güncellendi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 

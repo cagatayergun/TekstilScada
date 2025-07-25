@@ -19,5 +19,8 @@ namespace TekstilScada.Models
         public decimal AverageTemperature { get; set; }
         public decimal MaxWaterLevel { get; set; }
         public double AverageRpm { get; set; }
+        public int TotalWater { get; set; }
+        public int TotalElectricity { get; set; }
+        public int TotalSteam { get; set; }
     }
 }

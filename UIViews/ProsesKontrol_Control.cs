@@ -52,8 +52,15 @@ namespace TekstilScada.UI.Views
         {
             LoadRecipeList();
             LoadMachineList();
+            ApplyRolePermissions(); // YENİ: Yetki kontrolünü çağır
         }
+        private void ApplyRolePermissions()
+        {
+            // Sadece Admin ve Muhendis (Mühendis) rolleri kaydedebilir.
+            btnSaveRecipe.Enabled = CurrentUser.HasRole("Admin") || CurrentUser.HasRole("Muhendis");
 
+           
+        }
         private void LoadMachineList()
         {
             var machines = _machineRepository.GetAllEnabledMachines();
@@ -165,7 +172,7 @@ namespace TekstilScada.UI.Views
             lblStepDetailsTitle = new Label();
 
             _byMakinesiEditor.Dock = DockStyle.Fill;
-            _byMakinesiEditor.SplitterDistance = 350;
+            _byMakinesiEditor.SplitterDistance = 40;
 
             _byMakinesiEditor.Panel1.Controls.Add(dgvRecipeSteps);
             _byMakinesiEditor.Panel2.Controls.Add(pnlStepDetails);
@@ -197,8 +204,8 @@ namespace TekstilScada.UI.Views
             dgvRecipeSteps.Columns.Clear();
             dgvRecipeSteps.AutoGenerateColumns = false;
 
-            dgvRecipeSteps.Columns.Add(new DataGridViewTextBoxColumn { Name = "StepNumber", HeaderText = "Adım No", DataPropertyName = "StepNumber", Width = 70 });
-            dgvRecipeSteps.Columns.Add(new DataGridViewTextBoxColumn { Name = "StepType", HeaderText = "Adım Tipi", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            dgvRecipeSteps.Columns.Add(new DataGridViewTextBoxColumn { Name = "StepNumber", HeaderText = "Adım No", DataPropertyName = "StepNumber", Width = 40 });
+            dgvRecipeSteps.Columns.Add(new DataGridViewTextBoxColumn { Name = "StepType", HeaderText = "Adım Tipi", Width = 300 });
         }
 
         private void PopulateStepsGridView()
@@ -236,10 +243,11 @@ namespace TekstilScada.UI.Views
             if (selectedIndex < _currentRecipe.Steps.Count)
             {
                 var selectedStep = _currentRecipe.Steps[selectedIndex];
+                var selectedMachine = cmbTargetMachine.SelectedItem as Machine; // YENİ
                 lblStepDetailsTitle.Text = $"Adım Detayları - Adım No: {selectedStep.StepNumber}";
 
                 var mainEditor = new StepEditor_Control();
-                mainEditor.LoadStep(selectedStep);
+                mainEditor.LoadStep(selectedStep, selectedMachine);
                 mainEditor.StepDataChanged += (s, ev) => {
                     if (dgvRecipeSteps.Rows.Count > selectedIndex)
                     {

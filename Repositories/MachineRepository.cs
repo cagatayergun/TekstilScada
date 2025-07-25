@@ -19,7 +19,7 @@ namespace TekstilScada.Repositories
                 try
                 {
                     connection.Open();
-                    string query = "SELECT Id, MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword FROM machines ORDER BY Id;";
+                    string query = "SELECT Id, MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword, MachineSubType FROM machines ORDER BY Id;";
                     var cmd = new MySqlCommand(query, connection);
 
                     using (var reader = cmd.ExecuteReader())
@@ -40,6 +40,7 @@ namespace TekstilScada.Repositories
                                 // GÜNCELLENDİ: FTP alanları okunuyor
                                 FtpUsername = reader.IsDBNull(reader.GetOrdinal("FtpUsername")) ? string.Empty : reader.GetString("FtpUsername"),
                                 FtpPassword = reader.IsDBNull(reader.GetOrdinal("FtpPassword")) ? string.Empty : reader.GetString("FtpPassword"),
+                                MachineSubType = reader.IsDBNull(reader.GetOrdinal("MachineSubType")) ? string.Empty : reader.GetString("MachineSubType") // YENİ SATIR
                             };
                             machines.Add(machine);
                         }
@@ -64,7 +65,7 @@ namespace TekstilScada.Repositories
                 {
                     connection.Open();
                     // Filtrelemeyi doğrudan SQL sorgusunda yapıyoruz
-                    string query = "SELECT Id, MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword FROM machines WHERE IsEnabled = TRUE ORDER BY Id;";
+                    string query = "SELECT Id, MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword, MachineSubType FROM machines WHERE IsEnabled = TRUE ORDER BY Id;";
                     var cmd = new MySqlCommand(query, connection);
 
                     using (var reader = cmd.ExecuteReader())
@@ -85,6 +86,7 @@ namespace TekstilScada.Repositories
                                 // GÜNCELLENDİ: FTP alanları okunuyor
                                 FtpUsername = reader.IsDBNull(reader.GetOrdinal("FtpUsername")) ? string.Empty : reader.GetString("FtpUsername"),
                                 FtpPassword = reader.IsDBNull(reader.GetOrdinal("FtpPassword")) ? string.Empty : reader.GetString("FtpPassword"),
+                                MachineSubType = reader.IsDBNull(reader.GetOrdinal("MachineSubType")) ? string.Empty : reader.GetString("MachineSubType") // YENİ SATIR
                             };
                             machines.Add(machine);
                         }
@@ -105,7 +107,7 @@ namespace TekstilScada.Repositories
             {
                 connection.Open();
                 // GÜNCELLENDİ: FTP alanları sorguya eklendi
-                string query = "INSERT INTO machines (MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword) VALUES (@MachineUserDefinedId, @MachineName, @IpAddress, @Port, @MachineType, @IsEnabled, @VncAddress, @VncPassword, @FtpUsername, @FtpPassword);";
+                string query = "INSERT INTO machines (MachineUserDefinedId, MachineName, IpAddress, Port, MachineType, IsEnabled, VncAddress, VncPassword, FtpUsername, FtpPassword) VALUES (@MachineUserDefinedId, @MachineName, @IpAddress, @Port, @MachineType, @IsEnabled, @VncAddress, @VncPassword, @FtpUsername,MachineSubType=@MachineSubType @FtpPassword);";
                 var cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@MachineUserDefinedId", machine.MachineUserDefinedId);
                 cmd.Parameters.AddWithValue("@MachineName", machine.MachineName);
@@ -118,6 +120,7 @@ namespace TekstilScada.Repositories
                 // GÜNCELLENDİ: FTP alanları parametrelere eklendi
                 cmd.Parameters.AddWithValue("@FtpUsername", machine.FtpUsername);
                 cmd.Parameters.AddWithValue("@FtpPassword", machine.FtpPassword);
+                cmd.Parameters.AddWithValue("@MachineSubType", machine.MachineSubType); // YENİ SATIR
                 cmd.ExecuteNonQuery();
             }
         }
@@ -128,7 +131,7 @@ namespace TekstilScada.Repositories
             {
                 connection.Open();
                 // GÜNCELLENDİ: FTP alanları sorguya eklendi
-                string query = "UPDATE machines SET MachineUserDefinedId = @MachineUserDefinedId, MachineName = @MachineName, IpAddress = @IpAddress, Port = @Port, MachineType = @MachineType, IsEnabled = @IsEnabled, VncAddress = @VncAddress, VncPassword = @VncPassword, FtpUsername = @FtpUsername, FtpPassword = @FtpPassword WHERE Id = @Id;";
+                string query = "UPDATE machines SET MachineUserDefinedId = @MachineUserDefinedId, MachineName = @MachineName, IpAddress = @IpAddress, Port = @Port, MachineType = @MachineType, IsEnabled = @IsEnabled, VncAddress = @VncAddress, VncPassword = @VncPassword, FtpUsername = @FtpUsername, FtpPassword = @FtpPassword, MachineSubType=@MachineSubType WHERE Id = @Id;";
                 var cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@Id", machine.Id);
                 cmd.Parameters.AddWithValue("@MachineUserDefinedId", machine.MachineUserDefinedId);
@@ -142,6 +145,7 @@ namespace TekstilScada.Repositories
                 // GÜNCELLENDİ: FTP alanları parametrelere eklendi
                 cmd.Parameters.AddWithValue("@FtpUsername", machine.FtpUsername);
                 cmd.Parameters.AddWithValue("@FtpPassword", machine.FtpPassword);
+                cmd.Parameters.AddWithValue("@MachineSubType", machine.MachineSubType); // YENİ SATIR
                 cmd.ExecuteNonQuery();
             }
         }

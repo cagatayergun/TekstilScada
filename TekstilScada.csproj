@@ -27,4 +27,13 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="UIControls\DozajEditor_Boyama_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UIControls\DozajEditor_Yikama_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -16,6 +16,7 @@ namespace TekstilScada
     {
         private readonly MachineRepository _machineRepository;
         private readonly RecipeRepository _recipeRepository;
+        private readonly DashboardRepository _dashboardRepository; // YENÝ
         private readonly ProcessLogRepository _processLogRepository;
         private readonly AlarmRepository _alarmRepository;
         private readonly ProductionRepository _productionRepository;
@@ -51,13 +52,14 @@ namespace TekstilScada
             _alarmBanner = new AlarmBanner_Control();
             // YENÝ: Genel Bakýþ ekraný oluþturuldu
             _genelBakisView = new GenelBakis_Control();
-
+            _dashboardRepository = new DashboardRepository(); // YENÝ
             _ayarlarView.MachineListChanged += OnMachineListChanged;
             _pollingService.OnActiveAlarmStateChanged += OnActiveAlarmStateChanged;
             _prosesIzlemeView.MachineDetailsRequested += OnMachineDetailsRequested;
             _prosesIzlemeView.MachineVncRequested += OnMachineVncRequested;
             _makineDetayView.BackRequested += OnBackRequested;
             _alarmBanner.Click += AlarmBanner_Click;
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -65,10 +67,53 @@ namespace TekstilScada
             this.Controls.Add(_alarmBanner);
             _alarmBanner.Dock = DockStyle.Bottom;
             _alarmBanner.BringToFront();
+            UpdateUserInfo();
+            ApplyRolePermissions();
 
             ReloadSystem();
         }
+        private void UpdateUserInfo()
+        {
+            if (CurrentUser.IsLoggedIn)
+            {
+                lblCurrentUser.Text = $"Giriþ Yapan: {CurrentUser.User.FullName} ({CurrentUser.User.Username})";
+            }
+        }
+        private void ApplyRolePermissions()
+        {
+            // Ayarlar butonunu sadece Admin görebilir.
+            btnAyarlar.Enabled = CurrentUser.HasRole("Admin");
+        }
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Çýkýþ yapmak istediðinizden emin misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                // Mevcut formu gizle
+                this.Hide();
 
+                // Polling servisini durdur
+                _pollingService.Stop();
+
+                // Login formunu tekrar göster
+                using (var loginForm = new LoginForm())
+                {
+                    if (loginForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Baþarýlý giriþ yapýlýrsa, sistemi yeniden yükle ve formu göster
+                        UpdateUserInfo();
+                        ApplyRolePermissions();
+                        ReloadSystem();
+                        this.Show();
+                    }
+                    else
+                    {
+                        // Giriþ yapýlmazsa veya iptal edilirse uygulamayý kapat
+                        Application.Exit();
+                    }
+                }
+            }
+        }
         private void ReloadSystem()
         {
             _pollingService.Stop();
@@ -88,7 +133,7 @@ namespace TekstilScada
             _prosesIzlemeView.InitializeView(machines, _pollingService);
             _prosesKontrolView.InitializeControl(_recipeRepository, _machineRepository, plcManagers);
             _ayarlarView.InitializeControl(_machineRepository, plcManagers);
-            _raporlarView.InitializeControl(_machineRepository, _alarmRepository, _productionRepository);
+            _raporlarView.InitializeControl(_machineRepository, _alarmRepository, _productionRepository, _dashboardRepository, _processLogRepository, _recipeRepository);
 
             ShowView(_prosesIzlemeView);
         }
@@ -160,44 +205,62 @@ namespace TekstilScada
 
         private void AlarmBanner_Click(object sender, EventArgs e)
         {
+            ToggleLiveEventsWindow();
+           
+        }
+        // YENÝ: Status bar'daki butona týklandýðýnda çalýþacak metot
+        private void btnShowEvents_Click(object sender, EventArgs e)
+        {
+            ToggleLiveEventsWindow();
+        }
+        private void ToggleLiveEventsWindow()
+        {
             if (_liveEventPopup.Visible)
             {
                 _liveEventPopup.Hide();
             }
             else
             {
+                // Formun ilk açýlýþta ekranýn sað alt köþesinde belirmesini saðlayalým
+                if (_liveEventPopup.StartPosition == FormStartPosition.Manual)
+                {
+                    // Bu kod bloðu sadece ilk açýlýþta çalýþýr
+                }
+                _liveEventPopup.StartPosition = FormStartPosition.Manual;
+                Screen screen = Screen.FromPoint(this.Location);
+                _liveEventPopup.Left = screen.WorkingArea.Right - _liveEventPopup.Width;
+                _liveEventPopup.Top = screen.WorkingArea.Bottom - _liveEventPopup.Height;
                 _liveEventPopup.Show(this);
             }
         }
-
         private void OnActiveAlarmStateChanged(int machineId, FullMachineStatus status)
         {
-            if (!this.IsHandleCreated || this.IsDisposed) return;
-            this.Invoke(new Action(() =>
-            {
-                if (this.IsDisposed || _alarmBanner == null) return;
-                var activeAlarms = _pollingService.MachineDataCache.Values.Where(s => s.HasActiveAlarm).ToList();
-                if (activeAlarms.Any())
-                {
-                    var alarmToShow = activeAlarms
-                        .Select(s => new { Status = s, Definition = _alarmRepository.GetAlarmDefinitionByNumber(s.ActiveAlarmNumber) })
-                        .Where(ad => ad.Definition != null)
-                        .OrderByDescending(ad => ad.Definition.Severity)
-                        .FirstOrDefault();
-                    if (alarmToShow != null)
-                    {
-                        _alarmBanner.ShowAlarm(alarmToShow.Status.MachineName, alarmToShow.Definition);
-                    }
-                    else
-                    {
-                        _alarmBanner.HideBanner();
-                    }
-                }
-                else
-                {
-                    _alarmBanner.HideBanner();
-                }
-            }));
+            //if (!this.IsHandleCreated || this.IsDisposed) return;
+            //this.Invoke(new Action(() =>
+            //{
+            //    if (this.IsDisposed || _alarmBanner == null) return;
+            //    var activeAlarms = _pollingService.MachineDataCache.Values.Where(s => s.HasActiveAlarm).ToList();
+            //    if (activeAlarms.Any())
+            //    {
+            //        var alarmToShow = activeAlarms
+            //            .Select(s => new { Status = s, Definition = _alarmRepository.GetAlarmDefinitionByNumber(s.ActiveAlarmNumber) })
+            //            .Where(ad => ad.Definition != null)
+            //            .OrderByDescending(ad => ad.Definition.Severity)
+            //            .FirstOrDefault();
+            //        if (alarmToShow != null)
+            //        {
+            //            _alarmBanner.ShowAlarm(alarmToShow.Status.MachineName, alarmToShow.Definition);
+            //        }
+            //        else
+            //        {
+            //            _alarmBanner.HideBanner();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        _alarmBanner.HideBanner();
+            //    }
+            //}));
         }
 
         private void btnProsesIzleme_Click(object sender, EventArgs e)

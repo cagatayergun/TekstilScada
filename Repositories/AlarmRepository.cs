@@ -239,5 +239,43 @@ namespace TekstilScada.Repositories
             }
             return details;
         }
+        public List<dynamic> GetTopAlarmsByFrequency(DateTime startTime, DateTime endTime, int limit = 5)
+        {
+            var topAlarms = new List<dynamic>();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"
+                    SELECT 
+                        ad.AlarmText, 
+                        COUNT(ah.Id) as AlarmCount
+                    FROM alarm_history ah
+                    JOIN alarm_definitions ad ON ah.AlarmDefinitionId = ad.Id
+                    WHERE 
+                        ah.EventType = 'ACTIVE' AND
+                        ah.EventTimestamp BETWEEN @StartTime AND @EndTime
+                    GROUP BY ad.AlarmText
+                    ORDER BY AlarmCount DESC
+                    LIMIT @Limit;";
+
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@StartTime", startTime);
+                cmd.Parameters.AddWithValue("@EndTime", endTime);
+                cmd.Parameters.AddWithValue("@Limit", limit);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        topAlarms.Add(new
+                        {
+                            Alarm = reader.GetString("AlarmText"),
+                            Count = reader.GetInt32("AlarmCount")
+                        });
+                    }
+                }
+            }
+            return topAlarms;
+        }
     }
 }

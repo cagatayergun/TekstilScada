@@ -68,9 +68,9 @@ namespace TekstilScada.UI
             }
         }
 
+        // GÜNCELLENDİ: Formu kapatmak yerine gizle
         private void LiveEventPopup_Form_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Formu gerçekten kapatmak yerine gizle, böylece tekrar açılabilir.
             e.Cancel = true;
             this.Hide();
         }

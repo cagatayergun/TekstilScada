@@ -15,264 +15,301 @@ namespace TekstilScada.UI.Views
         #region Component Designer generated code
         private void InitializeComponent()
         {
-            this.dgvMachines = new System.Windows.Forms.DataGridView();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtFtpPassword = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtFtpUsername = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.cmbMachineType = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnNew = new System.Windows.Forms.Button();
-            this.chkIsEnabled = new System.Windows.Forms.CheckBox();
-            this.txtVncAddress = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtIpAddress = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtMachineName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtMachineId = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMachines)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.SuspendLayout();
+            dgvMachines = new DataGridView();
+            groupBox1 = new GroupBox();
+            txtMachineSubType = new TextBox();
+            label9 = new Label();
+            txtFtpPassword = new TextBox();
+            label8 = new Label();
+            txtFtpUsername = new TextBox();
+            label7 = new Label();
+            cmbMachineType = new ComboBox();
+            label6 = new Label();
+            btnDelete = new Button();
+            btnSave = new Button();
+            btnNew = new Button();
+            chkIsEnabled = new CheckBox();
+            txtVncAddress = new TextBox();
+            label5 = new Label();
+            txtPort = new TextBox();
+            label4 = new Label();
+            txtIpAddress = new TextBox();
+            label3 = new Label();
+            txtMachineName = new TextBox();
+            label2 = new Label();
+            txtMachineId = new TextBox();
+            label1 = new Label();
+            ((System.ComponentModel.ISupportInitialize)dgvMachines).BeginInit();
+            groupBox1.SuspendLayout();
+            SuspendLayout();
             // 
             // dgvMachines
             // 
-            this.dgvMachines.AllowUserToAddRows = false;
-            this.dgvMachines.AllowUserToDeleteRows = false;
-            this.dgvMachines.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvMachines.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvMachines.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvMachines.Location = new System.Drawing.Point(0, 0);
-            this.dgvMachines.MultiSelect = false;
-            this.dgvMachines.Name = "dgvMachines";
-            this.dgvMachines.ReadOnly = true;
-            this.dgvMachines.RowHeadersWidth = 51;
-            this.dgvMachines.RowTemplate.Height = 29;
-            this.dgvMachines.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvMachines.Size = new System.Drawing.Size(800, 300);
-            this.dgvMachines.TabIndex = 0;
-            this.dgvMachines.SelectionChanged += new System.EventHandler(this.dgvMachines_SelectionChanged);
+            dgvMachines.AllowUserToAddRows = false;
+            dgvMachines.AllowUserToDeleteRows = false;
+            dgvMachines.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvMachines.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvMachines.Dock = DockStyle.Fill;
+            dgvMachines.Location = new Point(0, 0);
+            dgvMachines.Margin = new Padding(3, 2, 3, 2);
+            dgvMachines.MultiSelect = false;
+            dgvMachines.Name = "dgvMachines";
+            dgvMachines.ReadOnly = true;
+            dgvMachines.RowHeadersWidth = 51;
+            dgvMachines.RowTemplate.Height = 29;
+            dgvMachines.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvMachines.Size = new Size(700, 412);
+            dgvMachines.TabIndex = 0;
+            dgvMachines.SelectionChanged += dgvMachines_SelectionChanged;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtFtpPassword);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.txtFtpUsername);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.cmbMachineType);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.btnDelete);
-            this.groupBox1.Controls.Add(this.btnSave);
-            this.groupBox1.Controls.Add(this.btnNew);
-            this.groupBox1.Controls.Add(this.chkIsEnabled);
-            this.groupBox1.Controls.Add(this.txtVncAddress);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.txtPort);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.txtIpAddress);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtMachineName);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtMachineId);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox1.Location = new System.Drawing.Point(0, 300);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(800, 250);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Makine Bilgileri";
+            groupBox1.Controls.Add(txtMachineSubType);
+            groupBox1.Controls.Add(label9);
+            groupBox1.Controls.Add(txtFtpPassword);
+            groupBox1.Controls.Add(label8);
+            groupBox1.Controls.Add(txtFtpUsername);
+            groupBox1.Controls.Add(label7);
+            groupBox1.Controls.Add(cmbMachineType);
+            groupBox1.Controls.Add(label6);
+            groupBox1.Controls.Add(btnDelete);
+            groupBox1.Controls.Add(btnSave);
+            groupBox1.Controls.Add(btnNew);
+            groupBox1.Controls.Add(chkIsEnabled);
+            groupBox1.Controls.Add(txtVncAddress);
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(txtPort);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(txtIpAddress);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(txtMachineName);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(txtMachineId);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Dock = DockStyle.Bottom;
+            groupBox1.Location = new Point(0, 224);
+            groupBox1.Margin = new Padding(3, 2, 3, 2);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(3, 2, 3, 2);
+            groupBox1.Size = new Size(700, 188);
+            groupBox1.TabIndex = 1;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Makine Bilgileri";
+            // 
+            // txtMachineSubType
+            // 
+            txtMachineSubType.Location = new Point(455, 52);
+            txtMachineSubType.Margin = new Padding(3, 2, 3, 2);
+            txtMachineSubType.Name = "txtMachineSubType";
+            txtMachineSubType.Size = new Size(219, 23);
+            txtMachineSubType.TabIndex = 21;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(368, 56);
+            label9.Name = "label9";
+            label9.Size = new Size(80, 15);
+            label9.TabIndex = 20;
+            label9.Text = "Makine Tipi 2:";
             // 
             // txtFtpPassword
             // 
-            this.txtFtpPassword.Location = new System.Drawing.Point(520, 150);
-            this.txtFtpPassword.Name = "txtFtpPassword";
-            this.txtFtpPassword.PasswordChar = '*';
-            this.txtFtpPassword.Size = new System.Drawing.Size(250, 27);
-            this.txtFtpPassword.TabIndex = 19;
+            txtFtpPassword.Location = new Point(455, 112);
+            txtFtpPassword.Margin = new Padding(3, 2, 3, 2);
+            txtFtpPassword.Name = "txtFtpPassword";
+            txtFtpPassword.PasswordChar = '*';
+            txtFtpPassword.Size = new Size(219, 23);
+            txtFtpPassword.TabIndex = 19;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(420, 153);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 20);
-            this.label8.TabIndex = 18;
-            this.label8.Text = "FTP Şifre:";
+            label8.AutoSize = true;
+            label8.Location = new Point(368, 115);
+            label8.Name = "label8";
+            label8.Size = new Size(55, 15);
+            label8.TabIndex = 18;
+            label8.Text = "FTP Şifre:";
             // 
             // txtFtpUsername
             // 
-            this.txtFtpUsername.Location = new System.Drawing.Point(520, 110);
-            this.txtFtpUsername.Name = "txtFtpUsername";
-            this.txtFtpUsername.Size = new System.Drawing.Size(250, 27);
-            this.txtFtpUsername.TabIndex = 17;
+            txtFtpUsername.Location = new Point(455, 82);
+            txtFtpUsername.Margin = new Padding(3, 2, 3, 2);
+            txtFtpUsername.Name = "txtFtpUsername";
+            txtFtpUsername.Size = new Size(219, 23);
+            txtFtpUsername.TabIndex = 17;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(420, 113);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 20);
-            this.label7.TabIndex = 16;
-            this.label7.Text = "FTP Kullanıcı:";
+            label7.AutoSize = true;
+            label7.Location = new Point(368, 85);
+            label7.Name = "label7";
+            label7.Size = new Size(77, 15);
+            label7.TabIndex = 16;
+            label7.Text = "FTP Kullanıcı:";
             // 
             // cmbMachineType
             // 
-            this.cmbMachineType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMachineType.FormattingEnabled = true;
-            this.cmbMachineType.Location = new System.Drawing.Point(520, 70);
-            this.cmbMachineType.Name = "cmbMachineType";
-            this.cmbMachineType.Size = new System.Drawing.Size(250, 28);
-            this.cmbMachineType.TabIndex = 15;
+            cmbMachineType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMachineType.FormattingEnabled = true;
+            cmbMachineType.Location = new Point(455, 22);
+            cmbMachineType.Margin = new Padding(3, 2, 3, 2);
+            cmbMachineType.Name = "cmbMachineType";
+            cmbMachineType.Size = new Size(219, 23);
+            cmbMachineType.TabIndex = 15;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(420, 73);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 20);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Makine Tipi:";
+            label6.AutoSize = true;
+            label6.Location = new Point(368, 26);
+            label6.Name = "label6";
+            label6.Size = new Size(71, 15);
+            label6.TabIndex = 14;
+            label6.Text = "Makine Tipi:";
             // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(676, 205);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(94, 29);
-            this.btnDelete.TabIndex = 13;
-            this.btnDelete.Text = "Sil";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            btnDelete.Location = new Point(592, 154);
+            btnDelete.Margin = new Padding(3, 2, 3, 2);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(82, 22);
+            btnDelete.TabIndex = 13;
+            btnDelete.Text = "Sil";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(576, 205);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(94, 29);
-            this.btnSave.TabIndex = 12;
-            this.btnSave.Text = "Kaydet";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Location = new Point(504, 154);
+            btnSave.Margin = new Padding(3, 2, 3, 2);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new Size(82, 22);
+            btnSave.TabIndex = 12;
+            btnSave.Text = "Kaydet";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // btnNew
             // 
-            this.btnNew.Location = new System.Drawing.Point(476, 205);
-            this.btnNew.Name = "btnNew";
-            this.btnNew.Size = new System.Drawing.Size(94, 29);
-            this.btnNew.TabIndex = 11;
-            this.btnNew.Text = "Yeni";
-            this.btnNew.UseVisualStyleBackColor = true;
-            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            btnNew.Location = new Point(416, 154);
+            btnNew.Margin = new Padding(3, 2, 3, 2);
+            btnNew.Name = "btnNew";
+            btnNew.Size = new Size(82, 22);
+            btnNew.TabIndex = 11;
+            btnNew.Text = "Yeni";
+            btnNew.UseVisualStyleBackColor = true;
+            btnNew.Click += btnNew_Click;
             // 
             // chkIsEnabled
             // 
-            this.chkIsEnabled.AutoSize = true;
-            this.chkIsEnabled.Location = new System.Drawing.Point(130, 190);
-            this.chkIsEnabled.Name = "chkIsEnabled";
-            this.chkIsEnabled.Size = new System.Drawing.Size(130, 24);
-            this.chkIsEnabled.TabIndex = 10;
-            this.chkIsEnabled.Text = "İzleme Aktif Mi?";
-            this.chkIsEnabled.UseVisualStyleBackColor = true;
+            chkIsEnabled.AutoSize = true;
+            chkIsEnabled.Location = new Point(114, 142);
+            chkIsEnabled.Margin = new Padding(3, 2, 3, 2);
+            chkIsEnabled.Name = "chkIsEnabled";
+            chkIsEnabled.Size = new Size(110, 19);
+            chkIsEnabled.TabIndex = 10;
+            chkIsEnabled.Text = "İzleme Aktif Mi?";
+            chkIsEnabled.UseVisualStyleBackColor = true;
             // 
             // txtVncAddress
             // 
-            this.txtVncAddress.Location = new System.Drawing.Point(130, 150);
-            this.txtVncAddress.Name = "txtVncAddress";
-            this.txtVncAddress.Size = new System.Drawing.Size(250, 27);
-            this.txtVncAddress.TabIndex = 9;
+            txtVncAddress.Location = new Point(114, 112);
+            txtVncAddress.Margin = new Padding(3, 2, 3, 2);
+            txtVncAddress.Name = "txtVncAddress";
+            txtVncAddress.Size = new Size(219, 23);
+            txtVncAddress.TabIndex = 9;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 153);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(89, 20);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "VNC Adresi:";
+            label5.AutoSize = true;
+            label5.Location = new Point(18, 115);
+            label5.Name = "label5";
+            label5.Size = new Size(70, 15);
+            label5.TabIndex = 8;
+            label5.Text = "VNC Adresi:";
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(255, 110);
-            this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(125, 27);
-            this.txtPort.TabIndex = 7;
+            txtPort.Location = new Point(223, 82);
+            txtPort.Margin = new Padding(3, 2, 3, 2);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(110, 23);
+            txtPort.TabIndex = 7;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(208, 113);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 20);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Port:";
+            label4.AutoSize = true;
+            label4.Location = new Point(182, 85);
+            label4.Name = "label4";
+            label4.Size = new Size(32, 15);
+            label4.TabIndex = 6;
+            label4.Text = "Port:";
             // 
             // txtIpAddress
             // 
-            this.txtIpAddress.Location = new System.Drawing.Point(130, 110);
-            this.txtIpAddress.Name = "txtIpAddress";
-            this.txtIpAddress.Size = new System.Drawing.Size(72, 27);
-            this.txtIpAddress.TabIndex = 5;
+            txtIpAddress.Location = new Point(114, 82);
+            txtIpAddress.Margin = new Padding(3, 2, 3, 2);
+            txtIpAddress.Name = "txtIpAddress";
+            txtIpAddress.Size = new Size(64, 23);
+            txtIpAddress.TabIndex = 5;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(20, 113);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 20);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "IP Adresi:";
+            label3.AutoSize = true;
+            label3.Location = new Point(18, 85);
+            label3.Name = "label3";
+            label3.Size = new Size(56, 15);
+            label3.TabIndex = 4;
+            label3.Text = "IP Adresi:";
             // 
             // txtMachineName
             // 
-            this.txtMachineName.Location = new System.Drawing.Point(130, 70);
-            this.txtMachineName.Name = "txtMachineName";
-            this.txtMachineName.Size = new System.Drawing.Size(250, 27);
-            this.txtMachineName.TabIndex = 3;
+            txtMachineName.Location = new Point(114, 52);
+            txtMachineName.Margin = new Padding(3, 2, 3, 2);
+            txtMachineName.Name = "txtMachineName";
+            txtMachineName.Size = new Size(219, 23);
+            txtMachineName.TabIndex = 3;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 73);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Makine Adı:";
+            label2.AutoSize = true;
+            label2.Location = new Point(18, 55);
+            label2.Name = "label2";
+            label2.Size = new Size(70, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Makine Adı:";
             // 
             // txtMachineId
             // 
-            this.txtMachineId.Location = new System.Drawing.Point(130, 30);
-            this.txtMachineId.Name = "txtMachineId";
-            this.txtMachineId.Size = new System.Drawing.Size(250, 27);
-            this.txtMachineId.TabIndex = 1;
+            txtMachineId.Location = new Point(114, 22);
+            txtMachineId.Margin = new Padding(3, 2, 3, 2);
+            txtMachineId.Name = "txtMachineId";
+            txtMachineId.Size = new Size(219, 23);
+            txtMachineId.TabIndex = 1;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Makine ID:";
+            label1.AutoSize = true;
+            label1.Location = new Point(18, 25);
+            label1.Name = "label1";
+            label1.Size = new Size(63, 15);
+            label1.TabIndex = 0;
+            label1.Text = "Makine ID:";
             // 
             // MachineSettings_Control
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.dgvMachines);
-            this.Name = "MachineSettings_Control";
-            this.Size = new System.Drawing.Size(800, 550);
-            this.Load += new System.EventHandler(this.MachineSettings_Control_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvMachines)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(groupBox1);
+            Controls.Add(dgvMachines);
+            Margin = new Padding(3, 2, 3, 2);
+            Name = "MachineSettings_Control";
+            Size = new Size(700, 412);
+            Load += MachineSettings_Control_Load;
+            ((System.ComponentModel.ISupportInitialize)dgvMachines).EndInit();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ResumeLayout(false);
         }
         #endregion
         private System.Windows.Forms.DataGridView dgvMachines;
@@ -297,5 +334,7 @@ namespace TekstilScada.UI.Views
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtFtpUsername;
         private System.Windows.Forms.Label label7;
+        private TextBox txtMachineSubType;
+        private Label label9;
     }
 }

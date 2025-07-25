@@ -26,14 +26,36 @@ namespace TekstilScada
             btnProsesKontrol = new Button();
             btnProsesIzleme = new Button();
             pnlContent = new Panel();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip(); // YENİ
+            this.lblCurrentUser = new System.Windows.Forms.ToolStripStatusLabel(); // YENİ
+            this.btnShowEvents = new System.Windows.Forms.ToolStripStatusLabel(); // YENİ
+            this.btnLogout = new System.Windows.Forms.Button(); // YENİ
+
             pnlNavigation.SuspendLayout();
             SuspendLayout();
+            // 
+            // btnLogout (YENİ BUTON)
+            // 
+            this.btnLogout.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnLogout.FlatAppearance.BorderSize = 0;
+            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnLogout.ForeColor = System.Drawing.Color.OrangeRed;
+            this.btnLogout.Location = new System.Drawing.Point(0, 410);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(175, 40);
+            this.btnLogout.TabIndex = 5;
+            this.btnLogout.Text = "Çıkış Yap";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // pnlNavigation
             // 
             pnlNavigation.BackColor = Color.FromArgb(45, 52, 54);
             pnlNavigation.Controls.Add(btnAyarlar);
             pnlNavigation.Controls.Add(btnRaporlar);
+            this.pnlNavigation.Controls.Add(this.btnLogout);
+
             // YENİ: Buton eklendi
             pnlNavigation.Controls.Add(btnGenelBakis);
             pnlNavigation.Controls.Add(btnProsesKontrol);
@@ -44,6 +66,35 @@ namespace TekstilScada
             pnlNavigation.Name = "pnlNavigation";
             pnlNavigation.Size = new Size(175, 450);
             pnlNavigation.TabIndex = 0;
+            // 
+            // statusStrip1 (YENİ STATUSSTRIP)
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblCurrentUser});
+            this.statusStrip1.Location = new System.Drawing.Point(175, 428);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(700, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblCurrentUser,
+            this.btnShowEvents}); // YENİ
+                                  // 
+                                  // btnShowEvents (YENİ BUTON/LABEL)
+                                  // 
+            this.btnShowEvents.IsLink = true;
+            this.btnShowEvents.Name = "btnShowEvents";
+            this.btnShowEvents.Size = new System.Drawing.Size(120, 17);
+            this.btnShowEvents.Spring = true; // Sağa yaslamak için
+            this.btnShowEvents.Text = "Canlı Olay Akışı Göster";
+            this.btnShowEvents.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnShowEvents.Click += new System.EventHandler(this.btnShowEvents_Click);
+            // 
+            // lblCurrentUser
+            // 
+            this.lblCurrentUser.Name = "lblCurrentUser";
+            this.lblCurrentUser.Size = new System.Drawing.Size(0, 16);
             // 
             // btnAyarlar
             // 
@@ -146,6 +197,7 @@ namespace TekstilScada
             // 
             // MainForm
             // 
+            this.Controls.Add(this.statusStrip1); // YENİ
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(875, 450);
@@ -170,5 +222,9 @@ namespace TekstilScada
         private System.Windows.Forms.Button btnProsesIzleme;
         private System.Windows.Forms.Panel pnlContent;
         private System.Windows.Forms.Button btnGenelBakis;
+        private System.Windows.Forms.StatusStrip statusStrip1; // YENİ
+        private System.Windows.Forms.ToolStripStatusLabel lblCurrentUser; // YENİ
+        private System.Windows.Forms.Button btnLogout; // YENİ
+        private System.Windows.Forms.ToolStripStatusLabel btnShowEvents; // YENİ
     }
 }

@@ -34,5 +34,7 @@ namespace TekstilScada.Services
         Task<OperateResult<List<ChemicalConsumptionData>>> ReadChemicalConsumptionDataAsync();
         Task<OperateResult<List<ProductionStepDetail>>> ReadStepAnalysisDataAsync();
         Task<OperateResult> AcknowledgeAlarm();
+        Task<OperateResult> ResetOeeCountersAsync();
+        Task<OperateResult> IncrementProductionCounterAsync();
     }
 }

@@ -174,6 +174,23 @@ namespace TekstilScada.Services
                 if (!batchNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(batchNoResult);
                 status.BatchNumarasi = batchNoResult.Content.Trim('\0', ' ');
                 status.ConnectionState = ConnectionStatus.Connected;
+
+                var isProductionResult = _plcClient.ReadBool("M8501");
+                if (!isProductionResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(isProductionResult);
+                status.IsMachineInProduction = isProductionResult.Content;
+
+                var downTimeResult = _plcClient.ReadInt32("D8800");
+                if (!downTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(downTimeResult);
+                status.TotalDownTimeSeconds = downTimeResult.Content;
+
+                var totalProdResult = _plcClient.ReadInt16("D8802");
+                if (!totalProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(totalProdResult);
+                status.TotalProductionCount = totalProdResult.Content;
+
+                var defectiveProdResult = _plcClient.ReadInt16("D8804");
+                if (!defectiveProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(defectiveProdResult);
+                status.DefectiveProductionCount = defectiveProdResult.Content;
+
                 return OperateResult.CreateSuccessResult(status);
             }
             catch (Exception ex)
@@ -181,7 +198,20 @@ namespace TekstilScada.Services
                 return new OperateResult<FullMachineStatus>($"Kurutma canlı veri okuma hatası: {ex.Message}");
             }
         }
+        public async Task<OperateResult> ResetOeeCountersAsync()
+        {
+            await Task.Run(() => _plcClient.Write("D8800", 0)); // Duruş Süresi
+            await Task.Run(() => _plcClient.Write("D8804", 0)); // Hatalı Üretim
+            return OperateResult.CreateSuccessResult();
+        }
+        public async Task<OperateResult> IncrementProductionCounterAsync()
+        {
+            var readResult = await Task.Run(() => _plcClient.ReadInt16("D8802"));
+            if (!readResult.IsSuccess) return new OperateResult($"Üretim sayacı okunamadı: {readResult.Message}");
 
+            short newCount = (short)(readResult.Content + 1);
+            return await Task.Run(() => _plcClient.Write("D8802", newCount));
+        }
         public Task<OperateResult<List<PlcOperator>>> ReadPlcOperatorsAsync()
         {
             throw new NotImplementedException("Kurutma makineleri operatör yönetimini desteklemez.");
@@ -211,5 +241,6 @@ namespace TekstilScada.Services
         {
             return Task.FromResult(OperateResult.CreateSuccessResult(new List<ProductionStepDetail>()));
         }
+       
     }
 }

@@ -83,7 +83,9 @@ namespace TekstilScada.Repositories
                             BatchId = reader.GetString("BatchId"),
                             StartTime = reader.GetDateTime("StartTime"),
                             EndTime = reader.IsDBNull(reader.GetOrdinal("EndTime")) ? DateTime.MinValue : reader.GetDateTime("EndTime"),
-                            CycleTime = reader.IsDBNull(reader.GetOrdinal("CycleTime")) ? "Devam Ediyor" : reader.GetString("CycleTime"),
+                            CycleTime = reader.IsDBNull(reader.GetOrdinal("CycleTime"))
+                                ? "Devam Ediyor"
+                                : reader.GetTimeSpan(reader.GetOrdinal("CycleTime")).ToString(@"hh\:mm\:ss"),
                             RecipeName = reader.IsDBNull(reader.GetOrdinal("RecipeName")) ? "" : reader.GetString("RecipeName"),
                             OperatorName = reader.IsDBNull(reader.GetOrdinal("OperatorName")) ? "" : reader.GetString("OperatorName"),
                             MusteriNo = reader.IsDBNull(reader.GetOrdinal("MusteriNo")) ? "" : reader.GetString("MusteriNo"),
@@ -113,16 +115,33 @@ namespace TekstilScada.Repositories
             }
         }
 
-        public void EndBatch(int machineId, string batchId)
+        public void EndBatch(int machineId, string batchId, FullMachineStatus finalStatus)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "UPDATE production_batches SET EndTime = @EndTime WHERE MachineId = @MachineId AND BatchId = @BatchId AND EndTime IS NULL;";
+                // Sadece EndTime değil, tüm OEE verilerini de güncelle
+                string query = @"
+                    UPDATE production_batches SET 
+                        EndTime = @EndTime,
+                        TotalProductionCount = @TotalProductionCount,
+                        DefectiveProductionCount = @DefectiveProductionCount,
+                        TotalDownTimeSeconds = @TotalDownTimeSeconds,
+                        StandardCycleTimeMinutes = @StandardCycleTimeMinutes
+                    WHERE 
+                        MachineId = @MachineId AND BatchId = @BatchId AND EndTime IS NULL;";
+
                 var cmd = new MySqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@EndTime", DateTime.Now);
                 cmd.Parameters.AddWithValue("@MachineId", machineId);
                 cmd.Parameters.AddWithValue("@BatchId", batchId);
+
+                // FinalStatus'tan gelen OEE verilerini ekle
+                cmd.Parameters.AddWithValue("@TotalProductionCount", finalStatus.TotalProductionCount);
+                cmd.Parameters.AddWithValue("@DefectiveProductionCount", finalStatus.DefectiveProductionCount);
+                cmd.Parameters.AddWithValue("@TotalDownTimeSeconds", finalStatus.TotalDownTimeSeconds);
+                cmd.Parameters.AddWithValue("@StandardCycleTimeMinutes", finalStatus.StandardCycleTimeMinutes);
+
                 cmd.ExecuteNonQuery();
             }
         }

@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TekstilScada.Models;
 
 namespace TekstilScada.Repositories
@@ -33,16 +34,34 @@ namespace TekstilScada.Repositories
             }
         }
 
-        public List<ProcessDataPoint> GetLogsForBatch(int machineId, string batchId)
+        public List<ProcessDataPoint> GetLogsForBatch(int machineId, string batchId, DateTime? startTime = null, DateTime? endTime = null)
         {
             var dataPoints = new List<ProcessDataPoint>();
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                string query = "SELECT LogTimestamp, LiveTemperature, LiveWaterLevel, LiveRpm FROM process_data_log WHERE MachineId = @MachineId AND BatchId = @BatchId ORDER BY LogTimestamp;";
-                var cmd = new MySqlCommand(query, connection);
+                var queryBuilder = new StringBuilder("SELECT LogTimestamp, LiveTemperature, LiveWaterLevel, LiveRpm FROM process_data_log WHERE MachineId = @MachineId ");
+
+                if (!string.IsNullOrEmpty(batchId))
+                {
+                    queryBuilder.Append("AND BatchId = @BatchId ");
+                }
+                if (startTime.HasValue)
+                {
+                    queryBuilder.Append("AND LogTimestamp >= @StartTime ");
+                }
+                if (endTime.HasValue)
+                {
+                    queryBuilder.Append("AND LogTimestamp <= @EndTime ");
+                }
+                queryBuilder.Append("ORDER BY LogTimestamp;");
+
+                var cmd = new MySqlCommand(queryBuilder.ToString(), connection);
                 cmd.Parameters.AddWithValue("@MachineId", machineId);
-                cmd.Parameters.AddWithValue("@BatchId", batchId);
+
+                if (!string.IsNullOrEmpty(batchId)) cmd.Parameters.AddWithValue("@BatchId", batchId);
+                if (startTime.HasValue) cmd.Parameters.AddWithValue("@StartTime", startTime.Value);
+                if (endTime.HasValue) cmd.Parameters.AddWithValue("@EndTime", endTime.Value);
 
                 using (var reader = cmd.ExecuteReader())
                 {

@@ -146,6 +146,27 @@ namespace TekstilScada.Services
 
                 status.ConnectionState = ConnectionStatus.Connected;
                 return OperateResult.CreateSuccessResult(status);
+
+                // --- YENİ: OEE VERİLERİNİ OKUMA ---
+                var isProductionResult = _plcClient.ReadBool("M2501");
+                if (!isProductionResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(isProductionResult);
+                status.IsMachineInProduction = isProductionResult.Content;
+
+                var downTimeResult = _plcClient.ReadInt32("D7764"); // 32-bit (Double Word)
+                if (!downTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(downTimeResult);
+                status.TotalDownTimeSeconds = downTimeResult.Content;
+
+                var cycleTimeResult = _plcClient.ReadInt16("D6411"); // 16-bit (Word)
+                if (!cycleTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(cycleTimeResult);
+                status.StandardCycleTimeMinutes = cycleTimeResult.Content;
+
+                var totalProdResult = _plcClient.ReadInt16("D7768"); // 16-bit (Word)
+                if (!totalProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(totalProdResult);
+                status.TotalProductionCount = totalProdResult.Content;
+
+                var defectiveProdResult = _plcClient.ReadInt16("D7770"); // 16-bit (Word)
+                if (!defectiveProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(defectiveProdResult);
+                status.DefectiveProductionCount = defectiveProdResult.Content;
             }
             catch (Exception ex)
             {
@@ -380,6 +401,41 @@ namespace TekstilScada.Services
             {
                 return new OperateResult<List<ProductionStepDetail>>($"Adım analiz verileri okunurken hata: {ex.Message}");
             }
+        }
+        // YENİ: PLC'deki OEE sayaçlarını sıfırlayan metot
+        public async Task<OperateResult> ResetOeeCountersAsync()
+        {
+            // D7764 (Duruş Süresi) adresine 0 yaz
+            var downTimeResetResult = await Task.Run(() => _plcClient.Write("D7764", 0));
+            if (!downTimeResetResult.IsSuccess)
+            {
+                return new OperateResult($"Duruş süresi sayacı sıfırlanamadı: {downTimeResetResult.Message}");
+            }
+
+            // D7770 (Hatalı Üretim) adresine 0 yaz
+            var defectiveResetResult = await Task.Run(() => _plcClient.Write("D7770", 0));
+            if (!defectiveResetResult.IsSuccess)
+            {
+                return new OperateResult($"Hatalı üretim sayacı sıfırlanamadı: {defectiveResetResult.Message}");
+            }
+
+            return OperateResult.CreateSuccessResult();
+        }
+        // YENİ: PLC'deki üretim sayacını bir artıran metot
+        public async Task<OperateResult> IncrementProductionCounterAsync()
+        {
+            // D7768 adresindeki mevcut değeri oku
+            var readResult = await Task.Run(() => _plcClient.ReadInt16("D7768"));
+            if (!readResult.IsSuccess)
+            {
+                return new OperateResult($"Üretim sayacı okunamadı: {readResult.Message}");
+            }
+
+            // Değeri bir artır ve geri yaz
+            short newCount = (short)(readResult.Content + 1);
+            var writeResult = await Task.Run(() => _plcClient.Write("D7768", newCount));
+
+            return writeResult;
         }
     }
 }

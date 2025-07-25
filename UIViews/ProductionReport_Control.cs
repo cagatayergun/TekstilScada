@@ -13,16 +13,21 @@ namespace TekstilScada.UI.Views
     {
         private MachineRepository _machineRepository;
         private ProductionRepository _productionRepository;
-
+        private RecipeRepository _recipeRepository; // YENİ
+        private ProcessLogRepository _processLogRepo; // HATA GİDERİLDİ: Alan eklendi
+        private AlarmRepository _alarmRepo; // HATA GİDERİLDİ: Alan eklendi
         public ProductionReport_Control()
         {
             InitializeComponent();
         }
 
-        public void InitializeControl(MachineRepository machineRepo, ProductionRepository productionRepo)
+        public void InitializeControl(MachineRepository machineRepo, ProductionRepository productionRepo, RecipeRepository recipeRepo, ProcessLogRepository processLogRepo , AlarmRepository alarmRepo)
         {
             _machineRepository = machineRepo;
             _productionRepository = productionRepo;
+            _recipeRepository = recipeRepo; // YENİ
+            _processLogRepo = processLogRepo; // Gelen parametre alana atandı
+            _alarmRepo = alarmRepo;           // Gelen parametre alana atandı
         }
 
         private void ProductionReport_Control_Load(object sender, EventArgs e)
@@ -75,7 +80,8 @@ namespace TekstilScada.UI.Views
                 var selectedReportItem = dgvProductionReport.Rows[e.RowIndex].DataBoundItem as ProductionReportItem;
                 if (selectedReportItem != null)
                 {
-                    var detailForm = new ProductionDetail_Form(selectedReportItem);
+                    // GÜNCELLENDİ: Detail form'a recipeRepository de gönderiliyor
+                    var detailForm = new ProductionDetail_Form(selectedReportItem, _recipeRepository, _processLogRepo, _alarmRepo);
                     detailForm.Show();
                 }
             }

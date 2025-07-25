@@ -14,6 +14,8 @@ namespace TekstilScada.Models
         public string VncPassword { get; set; }
         public string FtpUsername { get; set; }
         public string FtpPassword { get; set; }
+        public string MachineSubType { get; set; } // YENİ
+
         public string DisplayInfo => $"{MachineName} - ({MachineUserDefinedId})";
     }
 }

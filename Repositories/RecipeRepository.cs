@@ -197,5 +197,54 @@ namespace TekstilScada.Repositories
             }
             return recipe;
         }
+        public List<ProductionReportItem> GetRecipeUsageHistory(int recipeId)
+        {
+            var history = new List<ProductionReportItem>();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = @"
+            SELECT 
+                m.MachineName,
+                b.BatchId,
+                b.StartTime,
+                b.EndTime,
+                TIMEDIFF(b.EndTime, b.StartTime) as CycleTime,
+                b.TotalWater,
+                b.TotalElectricity,
+                b.TotalSteam
+            FROM production_batches AS b
+            JOIN machines AS m ON b.MachineId = m.Id
+            JOIN recipes AS r ON b.RecipeName = r.RecipeName
+            WHERE r.Id = @RecipeId AND b.EndTime IS NOT NULL
+            ORDER BY b.StartTime DESC;";
+
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@RecipeId", recipeId);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        history.Add(new ProductionReportItem
+                        {
+                            MachineName = reader.GetString("MachineName"),
+                            BatchId = reader.GetString("BatchId"),
+                            StartTime = reader.GetDateTime("StartTime"),
+                            EndTime = reader.GetDateTime("EndTime"),
+                            CycleTime = reader.IsDBNull(reader.GetOrdinal("CycleTime"))
+                                        ? "N/A"
+                                        : reader.GetTimeSpan(reader.GetOrdinal("CycleTime")).ToString(@"hh\:mm\:ss"),
+
+                            // GÜNCELLENDİ: Tüketim verileri artık okunuyor.
+                            TotalWater = reader.IsDBNull(reader.GetOrdinal("TotalWater")) ? 0 : reader.GetInt32("TotalWater"),
+                            TotalElectricity = reader.IsDBNull(reader.GetOrdinal("TotalElectricity")) ? 0 : reader.GetInt32("TotalElectricity"),
+                            TotalSteam = reader.IsDBNull(reader.GetOrdinal("TotalSteam")) ? 0 : reader.GetInt32("TotalSteam")
+                        });
+                    }
+                }
+            }
+            return history;
+        }
     }
 }
