@@ -105,30 +105,40 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<data name="label1.Text" xml:space="preserve">
-    <value>Username:</value>
+<resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <data name="DatabaseConnectionError" xml:space="preserve">
+    <value>Veritabanı bağlantısı kurulamadı.</value>
   </data>
-	<data name="label2.Text" xml:space="preserve">
-    <value>Password:</value>
+  <data name="CriticalError" xml:space="preserve">
+    <value>Kritik Hata</value>
   </data>
-	<data name="btnLogin.Text" xml:space="preserve">
-    <value>Login</value>
+  <data name="VncConnectionActive" xml:space="preserve">
+    <value>Zaten bir VNC bağlantısı aktif. Lütfen mevcut pencereyi kapatın.</value>
   </data>
-	<data name="btnCancel.Text" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Warning" xml:space="preserve">
+    <value>Uyarı</value>
   </data>
-	<data name="$this.Text" xml:space="preserve">
-    <value>SCADA System - Login</value>
+  <data name="VncAddressNotDefined" xml:space="preserve">
+    <value>Bu makine için bir VNC adresi tanımlanmamış.</value>
   </data>
-	<data name="CredentialsCannotBeEmpty" xml:space="preserve">
-    <value>Username and password cannot be empty.</value>
+  <data name="Information" xml:space="preserve">
+    <value>Bilgi</value>
   </data>
-	<data name="InvalidCredentials" xml:space="preserve">
-    <value>Invalid username or password!</value>
+  <data name="VncWindowError" xml:space="preserve">
+    <value>VNC penceresi açılırken bir hata oluştu: {0}</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Bu alana erişim yetkiniz bulunmamaktadır.</value>
+  </data>
+  <data name="PermissionDenied" xml:space="preserve">
+    <value>Yetki Reddedildi</value>
+  </data>
+
   <resheader name="version">
     <value>2.0</value>
   </resheader>
@@ -139,3 +149,8 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 </root>
+
+
+
+
+  

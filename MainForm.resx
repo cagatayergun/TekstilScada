@@ -105,9 +105,29 @@
       </xsd:complexType>
     </xsd:element>
   </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
+	
+		<resheader name="resmimetype">
+			<value>text/microsoft-resx</value>
+		</resheader>
+		<data name="btnGenelBakis.Text" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+		<data name="btnProsesIzleme.Text" xml:space="preserve">
+    <value>Process Monitoring</value>
+  </data>
+		<data name="btnProsesKontrol.Text" xml:space="preserve">
+    <value>Process Control</value>
+  </data>
+		<data name="btnRaporlar.Text" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+		<data name="btnAyarlar.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+		<data name="$this.Text" xml:space="preserve">
+    <value>Textile SCADA System</value>
+  </data>
+	
   <resheader name="version">
     <value>2.0</value>
   </resheader>
