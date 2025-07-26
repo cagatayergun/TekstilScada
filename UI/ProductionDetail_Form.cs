@@ -87,7 +87,21 @@ namespace TekstilScada.UI
                 formsPlot1.Plot.Axes.DateTimeTicksBottom();
                 formsPlot1.Plot.Title($"{_reportItem.MachineName} - Proses Grafiği");
                 formsPlot1.Plot.ShowLegend(ScottPlot.Alignment.UpperLeft);
-                formsPlot1.Plot.Axes.AutoScale();
+                
+        // --- YENİ KOD: GRAFİĞİ OTOMATİK YAKINLAŞTIRMA ---
+        // AutoScale() yerine, eksen limitlerini manuel olarak belirliyoruz.
+        DateTime startTime = _reportItem.StartTime;
+        // Eğer üretim bitmemişse, bitiş zamanı olarak şimdiki zamanı al
+        DateTime endTime = (_reportItem.EndTime == DateTime.MinValue) ? DateTime.Now : _reportItem.EndTime;
+
+        // Grafiğin kenarlara yapışmaması için küçük bir boşluk (marj) ekleyelim
+        startTime = startTime.AddMinutes(-5);
+        endTime = endTime.AddMinutes(5);
+
+        // X ekseninin (zaman) sınırlarını ayarla
+        formsPlot1.Plot.Axes.SetLimitsX(startTime.ToOADate(), endTime.ToOADate());
+        // Y eksenini (sıcaklık) ise kendi verisine göre otomatik ayarlamasını söyle
+        formsPlot1.Plot.Axes.AutoScaleY(); 
                 formsPlot1.Refresh();
             }
         }
@@ -98,7 +112,7 @@ namespace TekstilScada.UI
         }
         private void btnExportToExcel_Click(object sender, EventArgs e)
         {
-            ExcelExporter.ExportProductionDetailToExcel(_reportItem, dgvStepDetails, dgvAlarms);
+            ExcelExporter.ExportProductionDetailToExcel(_reportItem, dgvStepDetails, dgvAlarms,formsPlot1);
             //ExportProductionDetailToExcel(ProductionReportItem headerData, DataGridView dgvSteps, DataGridView dgvAlarms)
         }
     }

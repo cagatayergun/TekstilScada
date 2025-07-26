@@ -10,6 +10,8 @@ namespace TekstilScada.UI.Views
         private readonly OeeReport_Control _oeeReport;
         private readonly TrendAnaliz_Control _trendAnaliz;
         private readonly RecipeOptimization_Control _recipeOptimization;
+        private readonly ManualUsageReport_Control _manualUsageReport; // YENİ
+        private readonly GenelUretimRaporu_Control _genelUretimRaporu; // YENİ
 
         public Raporlar_Control()
         {
@@ -20,7 +22,10 @@ namespace TekstilScada.UI.Views
             _oeeReport = new OeeReport_Control();
             _trendAnaliz = new TrendAnaliz_Control();
             _recipeOptimization = new RecipeOptimization_Control();
-
+            _manualUsageReport = new ManualUsageReport_Control(); // YENİ
+            _genelUretimRaporu = new GenelUretimRaporu_Control(); // YENİ
+            _genelUretimRaporu.Dock = DockStyle.Fill; // YENİ
+            tabPageGenelUretim.Controls.Add(_genelUretimRaporu); // YENİ
             _alarmReport.Dock = DockStyle.Fill;
             tabPageAlarmReport.Controls.Add(_alarmReport);
 
@@ -35,9 +40,11 @@ namespace TekstilScada.UI.Views
 
             _recipeOptimization.Dock = DockStyle.Fill;
             tabPageRecipeOptimization.Controls.Add(_recipeOptimization);
+
+            _manualUsageReport.Dock = DockStyle.Fill;
+            tabPageManualReport.Controls.Add(_manualUsageReport); // HATA GİDERİLDİ
         }
 
-        // HATA GİDERİLDİ: Metot imzası ve içindeki çağrılar düzeltildi.
         public void InitializeControl(
             MachineRepository machineRepo,
             AlarmRepository alarmRepo,
@@ -46,11 +53,13 @@ namespace TekstilScada.UI.Views
             ProcessLogRepository processLogRepo,
             RecipeRepository recipeRepo)
         {
+            _genelUretimRaporu.InitializeControl(machineRepo, productionRepo); // YENİ
             _alarmReport.InitializeControl(machineRepo, alarmRepo);
-            _productionReport.InitializeControl(machineRepo, productionRepo, recipeRepo, processLogRepo, alarmRepo); // GÜNCELLENDİ
+            _productionReport.InitializeControl(machineRepo, productionRepo, recipeRepo, processLogRepo, alarmRepo);
             _oeeReport.InitializeControl(machineRepo, dashboardRepo);
             _trendAnaliz.InitializeControl(machineRepo, processLogRepo);
             _recipeOptimization.InitializeControl(recipeRepo);
+            _manualUsageReport.InitializeControl(machineRepo, processLogRepo); // YENİ
         }
     }
 }

@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TekstilScada.Models; // BU SATIR EKLENDİ
-
+using System.Linq;
+using System.Data;
 namespace TekstilScada.Repositories
 {
     public class ProductionRepository
@@ -276,6 +277,81 @@ namespace TekstilScada.Repositories
                 }
             }
             return consumptionList;
+        }
+        // YENİ: Seçilen makine listesi ve tarihe göre üretim verilerini çeken metot
+        public DataTable GetGeneralProductionReport(DateTime startTime, DateTime endTime, List<string> machineNames)
+        {
+            var dt = new DataTable();
+            if (machineNames == null || !machineNames.Any())
+            {
+                return dt; // Makine seçilmemişse boş tablo döndür
+            }
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                var query = @"
+                    SELECT 
+                        m.MachineName,
+                        b.BatchId,
+                        b.EndTime,
+                        b.TotalWater,
+                        b.TotalElectricity,
+                        b.TotalSteam
+                    FROM production_batches b
+                    JOIN machines m ON b.MachineId = m.Id
+                    WHERE b.EndTime BETWEEN @StartTime AND @EndTime 
+                    AND m.MachineName IN ({0})
+                    ORDER BY m.MachineName, b.EndTime;";
+
+                var machineParams = machineNames.Select((s, i) => "@machine" + i).ToArray();
+                var formattedQuery = string.Format(query, string.Join(", ", machineParams));
+
+                var cmd = new MySqlCommand(formattedQuery, connection);
+                cmd.Parameters.AddWithValue("@StartTime", startTime);
+                cmd.Parameters.AddWithValue("@EndTime", endTime);
+                for (int i = 0; i < machineNames.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue(machineParams[i], machineNames[i]);
+                }
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+            return dt;
+        }
+        // YENİ: Belirli bir periyot için toplam tüketimleri hesaplayan metot
+        public ConsumptionTotals GetConsumptionTotalsForPeriod(DateTime startTime, DateTime endTime)
+        {
+            var totals = new ConsumptionTotals();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                var query = @"
+                    SELECT 
+                        SUM(TotalWater) as Water, 
+                        SUM(TotalElectricity) as Electricity, 
+                        SUM(TotalSteam) as Steam 
+                    FROM production_batches 
+                    WHERE EndTime BETWEEN @StartTime AND @EndTime;";
+
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@StartTime", startTime);
+                cmd.Parameters.AddWithValue("@EndTime", endTime);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        totals.TotalWater = reader["Water"] == DBNull.Value ? 0 : reader.GetDecimal("Water");
+                        totals.TotalElectricity = reader["Electricity"] == DBNull.Value ? 0 : reader.GetDecimal("Electricity");
+                        totals.TotalSteam = reader["Steam"] == DBNull.Value ? 0 : reader.GetDecimal("Steam");
+                    }
+                }
+            }
+            return totals;
         }
     }
 }

@@ -53,6 +53,8 @@ namespace TekstilScada
             // YENÝ: Genel Bakýþ ekraný oluþturuldu
             _genelBakisView = new GenelBakis_Control();
             _dashboardRepository = new DashboardRepository(); // YENÝ
+            // GÜNCELLENDÝ: Yeni Dashboard'a servisleri enjekte et
+            _genelBakisView.InitializeControl(_pollingService, _machineRepository, _dashboardRepository);
             _ayarlarView.MachineListChanged += OnMachineListChanged;
             _pollingService.OnActiveAlarmStateChanged += OnActiveAlarmStateChanged;
             _prosesIzlemeView.MachineDetailsRequested += OnMachineDetailsRequested;

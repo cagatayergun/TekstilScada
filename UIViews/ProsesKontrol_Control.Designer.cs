@@ -33,6 +33,10 @@ namespace TekstilScada.UI.Views
             btnSaveRecipe = new Button();
             txtRecipeName = new TextBox();
             label3 = new Label();
+            this.pnlCost = new System.Windows.Forms.Panel(); // YENİ
+            this.lblTotalCost = new System.Windows.Forms.Label(); // YENİ
+            this.lblCostTitle = new System.Windows.Forms.Label(); // YENİ
+            this.btnCalculateCost = new System.Windows.Forms.Button(); // YENİ
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -121,7 +125,8 @@ namespace TekstilScada.UI.Views
             pnlEditorArea.Location = new Point(0, 60);
             pnlEditorArea.Margin = new Padding(3, 2, 3, 2);
             pnlEditorArea.Name = "pnlEditorArea";
-            pnlEditorArea.Size = new Size(701, 388);
+            this.pnlEditorArea.Location = new System.Drawing.Point(0, 100);
+            pnlEditorArea.Size = new Size(749, 348);
             pnlEditorArea.TabIndex = 1;
             // 
             // panel2
@@ -134,11 +139,13 @@ namespace TekstilScada.UI.Views
             panel2.Controls.Add(btnSaveRecipe);
             panel2.Controls.Add(txtRecipeName);
             panel2.Controls.Add(label3);
+            this.panel2.Controls.Add(this.btnCalculateCost); // YENİ
+            this.panel2.Controls.Add(this.pnlCost); // YENİ
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Margin = new Padding(3, 2, 3, 2);
             panel2.Name = "panel2";
-            panel2.Size = new Size(701, 60);
+            panel2.Size = new Size(749, 100);
             panel2.TabIndex = 0;
             // 
             // btnFtpSync
@@ -224,6 +231,56 @@ namespace TekstilScada.UI.Views
             // 
             // ProsesKontrol_Control
             // 
+            //
+            // btnCalculateCost (YENİ BUTON)
+            //
+            this.btnCalculateCost.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.btnCalculateCost.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnCalculateCost.ForeColor = System.Drawing.Color.White;
+            this.btnCalculateCost.Location = new System.Drawing.Point(359, 65);
+            this.btnCalculateCost.Name = "btnCalculateCost";
+            this.btnCalculateCost.Size = new System.Drawing.Size(280, 30);
+            this.btnCalculateCost.TabIndex = 8;
+            this.btnCalculateCost.Text = "Tahmini Maliyeti Hesapla";
+            this.btnCalculateCost.UseVisualStyleBackColor = false;
+            this.btnCalculateCost.Click += new System.EventHandler(this.btnCalculateCost_Click);
+            // 
+            // 
+            // pnlCost (YENİ PANEL)
+            // 
+            this.pnlCost.BackColor = System.Drawing.SystemColors.Info;
+            this.pnlCost.Controls.Add(this.lblTotalCost);
+            this.pnlCost.Controls.Add(this.lblCostTitle);
+            this.pnlCost.Location = new System.Drawing.Point(645, 6);
+            this.pnlCost.Name = "pnlCost";
+            this.pnlCost.Size = new System.Drawing.Size(100, 90);
+            this.pnlCost.TabIndex = 9;
+
+
+            // 
+            // lblTotalCost
+            // 
+            this.lblTotalCost.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTotalCost.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblTotalCost.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lblTotalCost.Location = new System.Drawing.Point(0, 25);
+            this.lblTotalCost.Name = "lblTotalCost";
+            this.lblTotalCost.Size = new System.Drawing.Size(100, 65);
+            this.lblTotalCost.TabIndex = 1;
+            this.lblTotalCost.Text = "0.00 TL";
+            this.lblTotalCost.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblCostTitle
+            // 
+            this.lblCostTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblCostTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblCostTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblCostTitle.Name = "lblCostTitle";
+            this.lblCostTitle.Size = new System.Drawing.Size(100, 25);
+            this.lblCostTitle.TabIndex = 0;
+            this.lblCostTitle.Text = "Tahmini Maliyet";
+            this.lblCostTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(splitContainer1);
@@ -257,5 +314,9 @@ namespace TekstilScada.UI.Views
         private System.Windows.Forms.ComboBox cmbTargetMachine;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnFtpSync;
+        private System.Windows.Forms.Panel pnlCost;
+        private System.Windows.Forms.Label lblTotalCost;
+        private System.Windows.Forms.Label lblCostTitle;
+        private System.Windows.Forms.Button btnCalculateCost;
     }
 }

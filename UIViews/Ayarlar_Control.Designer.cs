@@ -19,6 +19,7 @@ namespace TekstilScada.UI.Views
             this.tabPageMachineSettings = new System.Windows.Forms.TabPage();
             this.tabPageUserSettings = new System.Windows.Forms.TabPage();
             this.tabPageAlarmSettings = new System.Windows.Forms.TabPage();
+            this.tabPageCostSettings = new System.Windows.Forms.TabPage(); // YENİ
             // YENİ: PLC Operatörleri için sekme eklendi.
             this.tabPagePlcOperators = new System.Windows.Forms.TabPage();
             this.tabControlSettings.SuspendLayout();
@@ -30,6 +31,7 @@ namespace TekstilScada.UI.Views
             this.tabControlSettings.Controls.Add(this.tabPageMachineSettings);
             this.tabControlSettings.Controls.Add(this.tabPageUserSettings);
             this.tabControlSettings.Controls.Add(this.tabPageAlarmSettings);
+            this.tabControlSettings.Controls.Add(this.tabPageCostSettings); // YENİ
             // YENİ: Sekme kontrole eklendi.
             this.tabControlSettings.Controls.Add(this.tabPagePlcOperators);
             this.tabControlSettings.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -38,6 +40,16 @@ namespace TekstilScada.UI.Views
             this.tabControlSettings.SelectedIndex = 0;
             this.tabControlSettings.Size = new System.Drawing.Size(800, 600);
             this.tabControlSettings.TabIndex = 0;
+            // ...
+            // 
+            // tabPageCostSettings (YENİ SEKMEYİ EKLE)
+            // 
+            this.tabPageCostSettings.Location = new System.Drawing.Point(4, 29);
+            this.tabPageCostSettings.Name = "tabPageCostSettings";
+            this.tabPageCostSettings.Size = new System.Drawing.Size(792, 567);
+            this.tabPageCostSettings.TabIndex = 4;
+            this.tabPageCostSettings.Text = "Maliyet Parametreleri";
+            this.tabPageCostSettings.UseVisualStyleBackColor = true;
             // 
             // tabPageMachineSettings
             // 
@@ -94,5 +106,6 @@ namespace TekstilScada.UI.Views
         private System.Windows.Forms.TabPage tabPageUserSettings;
         private System.Windows.Forms.TabPage tabPageAlarmSettings;
         private System.Windows.Forms.TabPage tabPagePlcOperators;
+        private System.Windows.Forms.TabPage tabPageCostSettings; // YENİ
     }
 }

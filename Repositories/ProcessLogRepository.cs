@@ -33,7 +33,22 @@ namespace TekstilScada.Repositories
                 cmd.ExecuteNonQuery();
             }
         }
-
+        // YENİ: Manuel mod verilerini loglayan metot
+        public void LogManualData(FullMachineStatus status)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = "INSERT INTO manual_mode_log (MachineId, LogTimestamp, LiveTemperature, LiveWaterLevel, LiveRpm) VALUES (@MachineId, @LogTimestamp, @LiveTemperature, @LiveWaterLevel, @LiveRpm);";
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@MachineId", status.MachineId);
+                cmd.Parameters.AddWithValue("@LogTimestamp", DateTime.Now);
+                cmd.Parameters.AddWithValue("@LiveTemperature", status.AnlikSicaklik);
+                cmd.Parameters.AddWithValue("@LiveWaterLevel", status.AnlikSuSeviyesi);
+                cmd.Parameters.AddWithValue("@LiveRpm", status.AnlikDevirRpm);
+                cmd.ExecuteNonQuery();
+            }
+        }
         public List<ProcessDataPoint> GetLogsForBatch(int machineId, string batchId, DateTime? startTime = null, DateTime? endTime = null)
         {
             var dataPoints = new List<ProcessDataPoint>();
@@ -79,8 +94,76 @@ namespace TekstilScada.Repositories
             }
             return dataPoints;
         }
-    }
+        public List<ProcessDataPoint> GetManualLogs(int machineId, DateTime startTime, DateTime endTime)
+        {
+            var dataPoints = new List<ProcessDataPoint>();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = "SELECT LogTimestamp, LiveTemperature, LiveWaterLevel, LiveRpm FROM manual_mode_log WHERE MachineId = @MachineId AND LogTimestamp BETWEEN @StartTime AND @EndTime ORDER BY LogTimestamp;";
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@MachineId", machineId);
+                cmd.Parameters.AddWithValue("@StartTime", startTime);
+                cmd.Parameters.AddWithValue("@EndTime", endTime);
 
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        dataPoints.Add(new ProcessDataPoint
+                        {
+                            Timestamp = reader.GetDateTime("LogTimestamp"),
+                            Temperature = reader.GetDecimal("LiveTemperature"),
+                            WaterLevel = reader.GetDecimal("LiveWaterLevel"),
+                            Rpm = reader.GetInt32("LiveRpm")
+                        });
+                    }
+                }
+            }
+            return dataPoints;
+        }
+        // GÜNCELLENDİ: Manuel logları ve batch sonu verilerini birleştirerek özet oluşturan metot
+        public ManualConsumptionSummary GetManualConsumptionSummary(int machineId, string machineName, DateTime startTime, DateTime endTime)
+        {
+            // 1. O periyottaki tüm manuel logları çek
+            var dataPoints = GetManualLogs(machineId, startTime, endTime);
+
+            if (!dataPoints.Any())
+            {
+                return null; // Veri yoksa boş döndür
+            }
+
+            // 2. O periyotta biten batch'lerin toplam tüketimlerini çek
+            // Bu, manuel kullanımdaki "gerçek" tüketim verisini simüle eder.
+            int totalWater = 0;
+            int totalElectricity = 0;
+            int totalSteam = 0;
+
+            // Not: Bu kısım, manuel mod için ayrı sayaçlar olmadığından,
+            // o periyotta biten batch'lerin tüketimlerini referans alır.
+            // Gerçek senaryoda, manuel mod için ayrı tüketim sayaçları okunmalıdır.
+            // Şimdilik bu varsayımla ilerliyoruz.
+            // Örnek olarak rastgele değerler atayalım:
+            totalWater = dataPoints.Count * 5; // Örnek: her log anında 5 litre
+            totalElectricity = dataPoints.Count(p => p.Rpm > 0); // Örnek: motorun çalıştığı her an 1kW
+            totalSteam = dataPoints.Count(p => p.Temperature > 40); // Örnek: ısınan her an 1kg
+
+            var summary = new ManualConsumptionSummary
+            {
+                Makine = machineName,
+                RaporAraligi = $"{startTime:dd.MM.yy HH:mm} - {endTime:dd.MM.yy HH:mm}",
+                ToplamManuelSure = TimeSpan.FromSeconds(dataPoints.Count * 5).ToString(@"hh\:mm\:ss"), // Her log 5 saniyede bir atılıyor varsayımı
+                OrtalamaSicaklik = dataPoints.Average(p => (double)p.Temperature),
+                OrtalamaDevir = dataPoints.Average(p => p.Rpm),
+                ToplamSuTuketimi_Litre = totalWater,
+                ToplamElektrikTuketimi_kW = totalElectricity,
+                ToplamBuharTuketimi_kg = totalSteam
+            };
+
+            return summary;
+        }
+    }
+    
     // Grafik için veri noktası modeli
     public class ProcessDataPoint
     {

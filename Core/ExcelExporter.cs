@@ -1,10 +1,14 @@
 ﻿// Core/ExcelExporter.cs
 using ClosedXML.Excel;
+using ScottPlot.WinForms;
 using System;
 using System.Data;
 using System.Windows.Forms;
 using TekstilScada.Models;
-
+using ScottPlot; // HATA GİDERİLDİ: ScottPlot için eklendi
+using System.IO; // MemoryStream için eklendi
+using System.Drawing.Imaging; // HATA GİDERİLDİ: ImageFormat için eklendi
+using System.Linq; // Any() metodu için eklendi
 namespace TekstilScada.Core
 {
     public static class ExcelExporter
@@ -53,7 +57,7 @@ namespace TekstilScada.Core
             }
         }
         // YENİ: Detaylı üretim raporunu Excel'e aktaran metot
-        public static void ExportProductionDetailToExcel(ProductionReportItem headerData, DataGridView dgvSteps, DataGridView dgvAlarms)
+        public static void ExportProductionDetailToExcel(ProductionReportItem headerData, DataGridView dgvSteps, DataGridView dgvAlarms, FormsPlot formsPlot)
         {
             try
             {
@@ -63,9 +67,9 @@ namespace TekstilScada.Core
                     {
                         using (var workbook = new XLWorkbook())
                         {
+                            // --- 1. Sayfa: VERİLER ---
                             var worksheet = workbook.Worksheets.Add("Üretim Detay Raporu");
 
-                            // --- Başlık Bilgileri ---
                             worksheet.Cell("A1").Value = "MAKİNA ADI:";
                             worksheet.Cell("B1").Value = headerData.MachineName;
                             worksheet.Cell("A2").Value = "REÇETE ADI:";
@@ -82,7 +86,6 @@ namespace TekstilScada.Core
                             worksheet.Range("A1:A6").Style.Font.SetBold(true);
                             worksheet.Range("A1:B6").Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Left);
 
-                            // --- Adım Detayları Tablosu ---
                             int currentRow = 9;
                             worksheet.Cell(currentRow, 1).Value = "ADIM DETAYLARI";
                             worksheet.Range(currentRow, 1, currentRow, dgvSteps.Columns.Count).Merge().Style.Font.SetBold(true).Fill.SetBackgroundColor(XLColor.LightGray);
@@ -103,8 +106,7 @@ namespace TekstilScada.Core
                                 }
                             }
 
-                            // --- Alarm Tablosu ---
-                            currentRow += dgvSteps.Rows.Count + 2; // Arada boşluk bırak
+                            currentRow += dgvSteps.Rows.Count + 2;
                             worksheet.Cell(currentRow, 1).Value = "PROSES ALARMLARI";
                             worksheet.Range(currentRow, 1, currentRow, dgvAlarms.Columns.Count).Merge().Style.Font.SetBold(true).Fill.SetBackgroundColor(XLColor.LightGray);
 
@@ -124,9 +126,30 @@ namespace TekstilScada.Core
                                 }
                             }
 
-                            worksheet.Columns().AdjustToContents(); // Sütun genişliklerini ayarla
+                            worksheet.Columns().AdjustToContents();
+
+                            if (formsPlot != null && formsPlot.Plot.GetPlottables().Any())
+                            {
+                                // 1. Veri tablolarının en geniş noktasını bul.
+                                // Genellikle adım detayları tablosu daha geniştir.
+                                int lastUsedColumn = Math.Max(dgvSteps.Columns.Count, dgvAlarms.Columns.Count);
+
+                                // 2. Grafiğin başlayacağı kolonu belirle (2 kolon boşluk bırakarak)
+                                int chartStartColumn = lastUsedColumn + 3;
+
+                                // 3. Grafiği yüksek kalitede bir resme dönüştür
+                                var imageBytes = formsPlot.Plot.GetImageBytes(1200, 800,  ScottPlot.ImageFormat.Png);
+                                using (var ms = new MemoryStream(imageBytes))
+                                {
+                                    // 4. Resmi, hesaplanan konuma ekle
+                                    var image = worksheet.AddPicture(ms, "ProsesGrafiği")
+                                        .MoveTo(worksheet.Cell(1, chartStartColumn)) // 1. Satır, hesaplanan sütun
+                                        .Scale(0.75); // Görüntü boyutunu ayarla
+                                }
+                            }
+
                             workbook.SaveAs(sfd.FileName);
-                            MessageBox.Show("Rapor başarıyla Excel'e aktarıldı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Rapor (Veri ve Grafik) başarıyla Excel'e aktarıldı.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -136,5 +159,6 @@ namespace TekstilScada.Core
                 MessageBox.Show($"Excel'e aktarılırken bir hata oluştu: {ex.Message}", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

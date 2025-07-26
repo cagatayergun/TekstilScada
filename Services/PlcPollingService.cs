@@ -339,7 +339,16 @@ namespace TekstilScada.Services
                 {
                     try
                     {
-                        _processLogRepository.LogData(machineStatus);
+                        // Eğer makine üretim modundaysa, üretim logu at.
+                        if (machineStatus.IsInRecipeMode)
+                        {
+                            _processLogRepository.LogData(machineStatus);
+                        }
+                        // Eğer makine üretimde DEĞİLSE ama tüketim yapıyorsa (ısı veya motor), manuel log at.
+                        else if (machineStatus.AnlikSicaklik > 30 || machineStatus.AnlikDevirRpm > 0) // 30°C ortam sıcaklığı varsayımı
+                        {
+                            _processLogRepository.LogManualData(machineStatus);
+                        }
                     }
                     catch (Exception ex)
                     {

@@ -46,6 +46,9 @@ namespace TekstilScada.Models
         public short StandardCycleTimeMinutes { get; set; } // D6411
         public short TotalProductionCount { get; set; }   // D7768
         public short DefectiveProductionCount { get; set; } // D7770
+
+        // YENİ
+        public int CalismaSuresiDakika { get; set; }
     }
 
     public enum ConnectionStatus

@@ -1,8 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using TekstilScada.Models;
-
 namespace TekstilScada.Repositories
 {
     public class DashboardRepository
@@ -80,7 +81,77 @@ namespace TekstilScada.Repositories
             }
             return oeeList;
         }
+        public DataTable GetHourlyFactoryConsumption(DateTime date)
+        {
+            var dt = new DataTable();
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                // Bu sorgu, tamamlanmış batch'lerin verilerini saatlik olarak gruplayıp toplar.
+                string query = @"
+                    SELECT 
+                        HOUR(EndTime) AS Saat,
+                        SUM(TotalElectricity) AS ToplamElektrik,
+                        SUM(TotalWater) AS ToplamSu,
+                        SUM(TotalSteam) AS ToplamBuhar
+                    FROM production_batches
+                    WHERE DATE(EndTime) = @SelectedDate
+                    GROUP BY HOUR(EndTime)
+                    ORDER BY Saat;
+                ";
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@SelectedDate", date.ToString("yyyy-MM-dd"));
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+            return dt;
+        }
 
+        // YENİ: Seçilen güne ait en çok tüketim yapan 5 makineyi getiren metot
+        public DataTable GetTop5ConsumingMachines(DateTime date, string consumptionType)
+        {
+            var dt = new DataTable();
+            string consumptionColumn = "";
+
+            // Gelen parametreye göre SQL'deki sütun adını güvenli bir şekilde belirle
+            switch (consumptionType.ToLower())
+            {
+                case "su":
+                    consumptionColumn = "TotalWater";
+                    break;
+                case "buhar":
+                    consumptionColumn = "TotalSteam";
+                    break;
+                default:
+                    consumptionColumn = "TotalElectricity";
+                    break;
+            }
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = $@"
+                    SELECT 
+                        m.MachineName,
+                        SUM({consumptionColumn}) AS ToplamTuketim
+                    FROM production_batches b
+                    JOIN machines m ON b.MachineId = m.Id
+                    WHERE DATE(b.EndTime) = @SelectedDate
+                    GROUP BY m.MachineName
+                    ORDER BY ToplamTuketim DESC
+                    LIMIT 5;
+                ";
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@SelectedDate", date.ToString("yyyy-MM-dd"));
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+            }
+            return dt;
+        }
         // Bu metot şimdilik kullanılmıyor, olduğu gibi bırakabiliriz.
         public List<ProductionStepDetail> GetRecipeStepAnalysis(string recipeName)
         {

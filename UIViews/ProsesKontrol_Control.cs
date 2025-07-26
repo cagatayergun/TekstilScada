@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using TekstilScada.Core;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
 using TekstilScada.Services;
@@ -25,11 +26,12 @@ namespace TekstilScada.UI.Views
         private DataGridView dgvRecipeSteps;
         private Panel pnlStepDetails;
         private Label lblStepDetailsTitle;
+        private CostRepository _costRepository;
 
         public ProsesKontrol_Control()
         {
             InitializeComponent();
-
+            _costRepository = new CostRepository(); // YENİ
             this.Load += ProsesKontrol_Control_Load;
             btnNewRecipe.Click += BtnNewRecipe_Click;
             btnDeleteRecipe.Click += BtnDeleteRecipe_Click;
@@ -46,6 +48,7 @@ namespace TekstilScada.UI.Views
             _recipeRepository = recipeRepo;
             _machineRepository = machineRepo;
             _plcManagers = plcManagers;
+
         }
 
         private void ProsesKontrol_Control_Load(object sender, EventArgs e)
@@ -428,6 +431,36 @@ namespace TekstilScada.UI.Views
                 }
             }
             else { MessageBox.Show("Lütfen silmek için listeden bir reçete seçin.", "Uyarı"); }
+        }
+        private void btnCalculateCost_Click(object sender, EventArgs e)
+        {
+            if (_currentRecipe == null)
+            {
+                MessageBox.Show("Lütfen maliyetini hesaplamak için bir reçete seçin veya oluşturun.", "Uyarı");
+                return;
+            }
+
+            _currentRecipe.RecipeName = txtRecipeName.Text;
+
+            try
+            {
+                var costParams = _costRepository.GetAllParameters();
+                // GÜNCELLENDİ: Yeni metottan 3 değer alınıyor
+                var (totalCost, currencySymbol, breakdown) = RecipeCostCalculator.Calculate(_currentRecipe, costParams);
+
+                // GÜNCELLENDİ: Sonuç para birimi sembolü ile birlikte gösteriliyor
+                lblTotalCost.Text = $"{totalCost:F2} {currencySymbol}";
+
+                // Detaylı döküm tooltip'e yazdırılıyor
+                ToolTip toolTip = new ToolTip();
+                toolTip.SetToolTip(pnlCost, breakdown);
+                toolTip.SetToolTip(lblTotalCost, breakdown);
+                toolTip.SetToolTip(lblCostTitle, breakdown);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Maliyet hesaplanırken bir hata oluştu: {ex.Message}", "Hata");
+            }
         }
     }
 }

@@ -147,6 +147,11 @@ namespace TekstilScada.Services
                 status.ConnectionState = ConnectionStatus.Connected;
                 return OperateResult.CreateSuccessResult(status);
 
+                // YENİ: Çalışma Süresini Oku
+                var runTimeResult = _plcClient.ReadInt16("D7750");
+                if (!runTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(runTimeResult);
+                status.CalismaSuresiDakika = runTimeResult.Content;
+
                 // --- YENİ: OEE VERİLERİNİ OKUMA ---
                 var isProductionResult = _plcClient.ReadBool("M2501");
                 if (!isProductionResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(isProductionResult);
