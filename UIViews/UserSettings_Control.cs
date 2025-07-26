@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using TekstilScada.Models;
+using TekstilScada.Properties;
 using TekstilScada.Repositories;
 
 namespace TekstilScada.UI.Views
@@ -14,10 +15,11 @@ namespace TekstilScada.UI.Views
         private List<User> _users;
         private List<Role> _allRoles;
         private User _selectedUser;
-
+      
         public UserSettings_Control()
         {
             InitializeComponent();
+            ApplyLocalization();
             _repository = new UserRepository();
         }
 
@@ -26,7 +28,20 @@ namespace TekstilScada.UI.Views
             LoadAllRoles();
             RefreshUserList();
         }
+        private void ApplyLocalization()
+        {
 
+
+            groupBox1.Text = Resources.Userdetail;
+            label1.Text = Resources.Username;
+            label3.Text = Resources.namesurname;
+            label4.Text = Resources.Password;
+            chkIsActive.Text = Resources.Useractive;
+            label5.Text= Resources.roller;
+            btnNew.Text = Resources.New;
+            btnSave.Text = Resources.Save;
+            btnDelete.Text = Resources.Delete;
+        }
         private void LoadAllRoles()
         {
             _allRoles = _repository.GetAllRoles();
@@ -102,7 +117,8 @@ namespace TekstilScada.UI.Views
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
-                MessageBox.Show("Kullanıcı adı zorunludur.", "Eksik Bilgi");
+               
+                MessageBox.Show($"{Resources.usernamehard}", $"{Resources.EksikBilgi}");
                 return;
             }
 
@@ -114,7 +130,7 @@ namespace TekstilScada.UI.Views
                 {
                     if (string.IsNullOrWhiteSpace(txtPassword.Text))
                     {
-                        MessageBox.Show("Yeni kullanıcı için şifre zorunludur.", "Eksik Bilgi");
+                        MessageBox.Show($"{Resources.Yeni_kullanıcı_için_şifre_zorunludur_}", $"{Resources.EksikBilgi}");
                         return;
                     }
                     var newUser = new User { Username = txtUsername.Text, FullName = txtFullName.Text, IsActive = chkIsActive.Checked };
@@ -132,14 +148,14 @@ namespace TekstilScada.UI.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Kayıt sırasında hata: {ex.Message}", "Hata");
+                MessageBox.Show($"{Resources.Kayıt_sırasında_hata_}{ ex.Message}", $"{Resources.Error}");
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (_selectedUser == null) return;
-            var result = MessageBox.Show($"'{_selectedUser.Username}' kullanıcısını silmek istediğinizden emin misiniz?", "Onay", MessageBoxButtons.YesNo);
+            var result = MessageBox.Show($"'{_selectedUser.Username}' {Resources.kullanıcısını_silmek_istediğinizden_emin_misiniz_}", $"{Resources.Confirim}", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
                 try
@@ -150,7 +166,7 @@ namespace TekstilScada.UI.Views
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Silme sırasında hata: {ex.Message}", "Hata");
+                    MessageBox.Show($"{Resources.Silme_sırasında_hata_} { ex.Message}", "Hata");
                 }
             }
         }

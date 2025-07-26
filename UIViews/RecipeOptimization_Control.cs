@@ -5,7 +5,8 @@ using System.Linq;
 using System.Windows.Forms;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
-
+using TekstilScada.Localization;
+using TekstilScada.Properties;
 namespace TekstilScada.UI.Views
 {
     public partial class RecipeOptimization_Control : UserControl
@@ -15,13 +16,31 @@ namespace TekstilScada.UI.Views
         public RecipeOptimization_Control()
         {
             InitializeComponent();
+            ApplyLocalization();
         }
 
         public void InitializeControl(RecipeRepository recipeRepo)
         {
             _recipeRepository = recipeRepo;
         }
+        private void ApplyLocalization()
+        {
 
+
+
+            label1.Text = Resources.anarecete;
+            label7.Text = Resources.karsilastirilacak;
+            btnAnalyze.Text = Resources.analizet;
+            label3.Text = Resources.ortalamasutuketimi;
+            label4.Text = Resources.ortalamacevrimsuresi;
+            label5.Text = Resources.ortalamaelektriktuketimi;
+            label6.Text = Resources.ortalamabuhartuketimi;
+            label14.Text = Resources.ortalamasutuketimi;
+            label12.Text = Resources.ortalamacevrimsuresi;
+            label10.Text = Resources.ortalamaelektriktuketimi;
+            label8.Text = Resources.ortalamabuhartuketimi;
+            label2.Text = Resources.gecmisuretimler;
+        }
         private void RecipeOptimization_Control_Load(object sender, EventArgs e)
         {
             if (_recipeRepository != null)

@@ -188,7 +188,7 @@
             // lblAvgSteam2
             // 
             lblAvgSteam2.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold);
-            lblAvgSteam2.Location = new Point(197, 49);
+            lblAvgSteam2.Location = new Point(197, 64);
             lblAvgSteam2.Name = "lblAvgSteam2";
             lblAvgSteam2.Size = new Size(175, 30);
             lblAvgSteam2.TabIndex = 15;
@@ -345,7 +345,7 @@
             // lblAvgWater
             // 
             lblAvgWater.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold);
-            lblAvgWater.Location = new Point(13,19);
+            lblAvgWater.Location = new Point(13, 19);
             lblAvgWater.Name = "lblAvgWater";
             lblAvgWater.Size = new Size(175, 30);
             lblAvgWater.TabIndex = 1;

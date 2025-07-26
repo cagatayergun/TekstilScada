@@ -5,8 +5,10 @@ using System.Linq;
 using System.Windows.Forms;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
+using TekstilScada.Localization;
 // ScottPlot 5 için doğru using ifadeleri
 using ScottPlot;
+using TekstilScada.Properties;
 
 namespace TekstilScada.UI.Views
 {
@@ -18,8 +20,22 @@ namespace TekstilScada.UI.Views
         public TrendAnaliz_Control()
         {
             InitializeComponent();
+            ApplyLocalization();
         }
+        private void ApplyLocalization()
+        {
 
+
+         
+            label1.Text = Resources.Baslangic_tarihi;
+            label2.Text = Resources.Bitis_tarihi;
+            groupBox1.Text = Resources.makineler;
+            groupBox2.Text = Resources.görüntülenecek_veriler;
+            chkTemperature.Text = Resources.Temperature;
+            chkWaterLevel.Text = Resources.suseviyesi;
+            chkRpm.Text = Resources.devir;
+            btnGenerateChart.Text = Resources.grafigiolustur;
+        }
         // HATA GİDERİLDİ: Eksik olan InitializeControl metodu eklendi.
         public void InitializeControl(MachineRepository machineRepo, ProcessLogRepository processLogRepo)
         {

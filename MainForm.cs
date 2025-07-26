@@ -11,7 +11,7 @@ using TekstilScada.Services;
 using TekstilScada.UI;
 using TekstilScada.UI.Controls;
 using TekstilScada.UI.Views;
-
+using TekstilScada.Properties;
 namespace TekstilScada
 {
     public partial class MainForm : Form
@@ -82,7 +82,8 @@ namespace TekstilScada
             List<Machine> machines = _machineRepository.GetAllEnabledMachines();
             if (machines == null)
             {
-                MessageBox.Show("Veritabaný baðlantýsý kurulamadý.", "Kritik Hata");
+                
+                MessageBox.Show(Resources.DatabaseConnectionFailed, Resources.CriticalError);
                 return;
             }
             _pollingService.Start(machines);
@@ -114,20 +115,20 @@ namespace TekstilScada
             btnProsesKontrol.Text = Strings.MainMenu_ProcessControl;
             btnRaporlar.Text = Strings.MainMenu_Reports;
             btnAyarlar.Text = Strings.MainMenu_Settings;
-            dilToolStripMenuItem.Text = "Dil";
-            oturumToolStripMenuItem.Text = "Oturum";
-            çýkýþYapToolStripMenuItem.Text = "Çýkýþ Yap";
+            dilToolStripMenuItem.Text = Resources.Language;
+            oturumToolStripMenuItem.Text = Resources.Session;
+            çýkýþYapToolStripMenuItem.Text = Resources.Logout;
         }
 
         private void UpdateUserInfoAndPermissions()
         {
             if (CurrentUser.IsLoggedIn)
             {
-                lblStatusCurrentUser.Text = $"Giriþ Yapan: {CurrentUser.User.FullName}";
+                lblStatusCurrentUser.Text = $"{Resources.Loggedin}: {CurrentUser.User.FullName}";
             }
             else
             {
-                lblStatusCurrentUser.Text = "Giriþ Yapan: -";
+                lblStatusCurrentUser.Text = $"{Resources.Loggedin}: -";
             }
             // Ayarlar butonunu sadece "Admin" rolüne sahip kullanýcýlar için etkinleþtir.
             btnAyarlar.Enabled = CurrentUser.HasRole("Admin");
@@ -137,7 +138,7 @@ namespace TekstilScada
         {
             if (view is Ayarlar_Control && !CurrentUser.HasRole("Admin"))
             {
-                MessageBox.Show("Bu alana eriþim yetkiniz bulunmamaktadýr.", "Yetki Reddedildi");
+                MessageBox.Show($"{Resources.NoAccess}.", $"{ Resources.AccessDenied}");
                 return;
             }
             pnlContent.Controls.Clear();
@@ -161,7 +162,7 @@ namespace TekstilScada
 
         private void çýkýþYapToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Çýkýþ yapmak istediðinizden emin misiniz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show($"{Resources.Cikiseminmisin}?", $"{Resources.Confirim}", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 this.Hide();
@@ -198,7 +199,7 @@ namespace TekstilScada
             if (_activeVncViewerForm != null && !_activeVncViewerForm.IsDisposed)
             {
                 _activeVncViewerForm.Activate();
-                MessageBox.Show("Zaten bir VNC baðlantýsý aktif. Lütfen mevcut pencereyi kapatýn.", "Uyarý", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"{Resources.Vnccurrentclose}", $"{Resources.Warning}", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             var machine = _machineRepository.GetAllMachines().FirstOrDefault(m => m.Id == machineId);
@@ -207,7 +208,7 @@ namespace TekstilScada
                 try
                 {
                     var vncForm = new VncViewer_Form(machine.VncAddress, machine.VncPassword);
-                    vncForm.Text = $"{machine.MachineName} - VNC Baðlantýsý";
+                    vncForm.Text = $"{machine.MachineName} - ${Resources.VncConnectionTo}";
                     vncForm.FormClosed += (s, args) => { _activeVncViewerForm = null; };
                     _activeVncViewerForm = vncForm;
                     vncForm.Show();
@@ -215,12 +216,12 @@ namespace TekstilScada
                 catch (Exception ex)
                 {
                     _activeVncViewerForm = null;
-                    MessageBox.Show($"VNC penceresi açýlýrken bir hata oluþtu: {ex.Message}", "Hata");
+                    MessageBox.Show($"{Resources.Vncconnecterror} {ex.Message}", $"{Resources.Error}");
                 }
             }
             else
             {
-                MessageBox.Show("Bu makine için bir VNC adresi tanýmlanmamýþ.", "Bilgi");
+                MessageBox.Show($"{Resources.Vncnomachine}", $"{Resources.Information}");
             }
         }
 
@@ -250,7 +251,7 @@ namespace TekstilScada
                 }
                 else
                 {
-                    lblStatusLiveEvents.Text = "Canlý Olay Akýþý Göster";
+                    lblStatusLiveEvents.Text = $"{Resources.Livelogsee}";
                     lblStatusLiveEvents.BackColor = System.Drawing.SystemColors.Control;
                     lblStatusLiveEvents.ForeColor = System.Drawing.SystemColors.ControlText;
                 }
@@ -281,7 +282,7 @@ namespace TekstilScada
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"MainForm kapanýrken VNCViewer formunu kapatma hatasý: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"{Resources.Closeandvnc} {ex.Message}");
                 }
             }
         }

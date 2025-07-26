@@ -1,6 +1,7 @@
 ﻿using TekstilScada.Repositories;
 using System.Windows.Forms;
-
+using TekstilScada.Properties;
+using TekstilScada.Localization;
 namespace TekstilScada.UI.Views
 {
     public partial class Raporlar_Control : UserControl
@@ -16,7 +17,7 @@ namespace TekstilScada.UI.Views
         public Raporlar_Control()
         {
             InitializeComponent();
-
+            ApplyLocalization();
             _alarmReport = new AlarmReport_Control();
             _productionReport = new ProductionReport_Control();
             _oeeReport = new OeeReport_Control();
@@ -44,7 +45,21 @@ namespace TekstilScada.UI.Views
             _manualUsageReport.Dock = DockStyle.Fill;
             tabPageManualReport.Controls.Add(_manualUsageReport); // HATA GİDERİLDİ
         }
+        private void ApplyLocalization()
+        {
 
+
+
+            tabPageProductionReport.Text = Resources.üretimraporu;
+            tabPageAlarmReport.Text = Resources.alarmrapor;
+            tabPageGenelUretim.Text = Resources.geneltüketim;
+            tabPageManualReport.Text = Resources.manuelrapor;
+            tabPageOeeReport.Text = Resources.OeeReport;
+
+            tabPageRecipeOptimization.Text = Resources.RecipeOptimization;
+            tabPageTrendAnalysis.Text = Resources.TrendAnalysis;
+
+        }
         public void InitializeControl(
             MachineRepository machineRepo,
             AlarmRepository alarmRepo,
