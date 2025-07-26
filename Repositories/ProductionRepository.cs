@@ -6,11 +6,12 @@ using System.Text;
 using TekstilScada.Models; // BU SATIR EKLENDİ
 using System.Linq;
 using System.Data;
+using TekstilScada.Core; // Bu satırı ekleyin
 namespace TekstilScada.Repositories
 {
     public class ProductionRepository
     {
-        private readonly string _connectionString = "server=localhost;port=3306;database=scada_db;user=user1;password=Cagatay.19;";
+        private readonly string _connectionString = AppConfig.ConnectionString;
 
         public class ReportFilters
         {

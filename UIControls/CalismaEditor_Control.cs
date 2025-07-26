@@ -7,13 +7,12 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
 {
     public partial class CalismaEditor_Control : UserControl
     {
-        private ScadaRecipeStep _step;
+        private CalismaParams _params;
         public event EventHandler ValueChanged;
 
         public CalismaEditor_Control()
         {
             InitializeComponent();
-            // Olayları bağla
             numSagSolSure.ValueChanged += OnValueChanged;
             numBeklemeSuresi.ValueChanged += OnValueChanged;
             numCalismaDevri.ValueChanged += OnValueChanged;
@@ -24,29 +23,26 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
 
         public void LoadStep(ScadaRecipeStep step)
         {
-            _step = step;
-            numSagSolSure.Value = _step.StepDataWords[14];
-            numBeklemeSuresi.Value = _step.StepDataWords[15];
-            numCalismaDevri.Value = _step.StepDataWords[16];
-            numCalismaSuresi.Value = _step.StepDataWords[18];
+            _params = new CalismaParams(step.StepDataWords);
 
-            short controlWord = _step.StepDataWords[17];
-            chkIsiKontrol.Checked = (controlWord & 1) != 0; // Bit 0
-            chkAlarm.Checked = (controlWord & 2) != 0;      // Bit 1
+            numSagSolSure.Value = _params.SagSolSure;
+            numBeklemeSuresi.Value = _params.BeklemeSuresi;
+            numCalismaDevri.Value = _params.CalismaDevri;
+            numCalismaSuresi.Value = _params.CalismaSuresi;
+            chkIsiKontrol.Checked = _params.IsiKontrol;
+            chkAlarm.Checked = _params.Alarm;
         }
 
         private void OnValueChanged(object sender, EventArgs e)
         {
-            if (_step == null) return;
-            _step.StepDataWords[14] = (short)numSagSolSure.Value;
-            _step.StepDataWords[15] = (short)numBeklemeSuresi.Value;
-            _step.StepDataWords[16] = (short)numCalismaDevri.Value;
-            _step.StepDataWords[18] = (short)numCalismaSuresi.Value;
+            if (_params == null) return;
 
-            short controlWord = 0;
-            if (chkIsiKontrol.Checked) controlWord |= 1;
-            if (chkAlarm.Checked) controlWord |= 2;
-            _step.StepDataWords[17] = controlWord;
+            _params.SagSolSure = (short)numSagSolSure.Value;
+            _params.BeklemeSuresi = (short)numBeklemeSuresi.Value;
+            _params.CalismaDevri = (short)numCalismaDevri.Value;
+            _params.CalismaSuresi = (short)numCalismaSuresi.Value;
+            _params.IsiKontrol = chkIsiKontrol.Checked;
+            _params.Alarm = chkAlarm.Checked;
 
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }

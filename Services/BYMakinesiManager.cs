@@ -17,7 +17,39 @@ namespace TekstilScada.Services
     {
         private readonly LSFastEnet _plcClient;
         public string IpAddress { get; private set; }
+        #region PLC Adres Sabitleri
+        private const string ADIM_NO = "D3568";
+        private const string RECETE_MODU = "KX30D";
+        private const string PAUSE_DURUMU = "MX1015";
+        private const string ALARM_NO = "D3604";
+        private const string ANLIK_SU_SEVIYESI = "D6002";
+        private const string ANLIK_DEVIR = "D6007";
+        private const string ANLIK_SICAKLIK = "D4980";
+        private const string PROSES_YUZDESI = "D7752";
+        private const string MAKINE_TIPI = "D6100";
+        private const string SIPARIS_NO = "D6110";
+        private const string MUSTERI_NO = "D6120";
+        private const string BATCH_NO = "D6130";
+        private const string OPERATOR_ISMI = "D6460";
+        private const string RECETE_ADI = "D2550";
+        private const string SU_MIKTARI = "D7702";
+        private const string ELEKTRIK_HARCAMA = "D7720";
+        private const string BUHAR_HARCAMA = "D7744";
+        private const string CALISMA_SURESI = "D7750";
+        private const string AKTIF_CALISMA = "M2501";
+        private const string TOPLAM_DURUS_SURESI_SN = "D7764";
+        private const string STANDART_CEVRIM_SURESI_DK = "D6411";
+        private const string TOPLAM_URETIM_ADEDI = "D7768";
+        private const string HATALI_URETIM_ADEDI = "D7770";
 
+
+
+
+
+
+
+
+        #endregion
         public BYMakinesiManager(string ipAddress, int port)
         {
             _plcClient = new LSFastEnet(ipAddress, port);
@@ -74,104 +106,113 @@ namespace TekstilScada.Services
             {
                 var status = new FullMachineStatus();
 
-                var adimNoResult = _plcClient.ReadInt16("D70");
+                var adimNoResult = _plcClient.ReadInt16(ADIM_NO);
                 if (!adimNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(adimNoResult);
                 status.AktifAdimNo = adimNoResult.Content;
-                Debug.WriteLine($"1");
-                var receteModuResult = _plcClient.ReadBool("KX30D");
+
+                var receteModuResult = _plcClient.ReadBool(RECETE_MODU);
                 if (!receteModuResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(receteModuResult);
                 status.IsInRecipeMode = receteModuResult.Content;
-                Debug.WriteLine($"2");
-                var pauseResult = _plcClient.ReadBool("MX1015");
+
+                var pauseResult = _plcClient.ReadBool(PAUSE_DURUMU);
                 if (!pauseResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(pauseResult);
                 status.IsPaused = pauseResult.Content;
-                Debug.WriteLine($"3");
-                var alarmNoResult = _plcClient.ReadInt16("D3604");
+
+                var alarmNoResult = _plcClient.ReadInt16(ALARM_NO);
                 if (!alarmNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(alarmNoResult);
                 status.ActiveAlarmNumber = alarmNoResult.Content;
                 status.HasActiveAlarm = alarmNoResult.Content > 0;
-                Debug.WriteLine($"4");
-                var suSeviyesiResult = _plcClient.ReadInt16("D6002");
+
+                var suSeviyesiResult = _plcClient.ReadInt16(ANLIK_SU_SEVIYESI);
                 if (!suSeviyesiResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(suSeviyesiResult);
                 status.AnlikSuSeviyesi = suSeviyesiResult.Content;
-                Debug.WriteLine($"5");
-                var devirResult = _plcClient.ReadInt16("D6007");
+
+                var devirResult = _plcClient.ReadInt16(ANLIK_DEVIR);
                 if (!devirResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(devirResult);
                 status.AnlikDevirRpm = devirResult.Content;
-                Debug.WriteLine($"6");
-                var sicaklikResult = _plcClient.ReadInt16("D4980");
+
+                var sicaklikResult = _plcClient.ReadInt16(ANLIK_SICAKLIK);
                 if (!sicaklikResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(sicaklikResult);
                 status.AnlikSicaklik = sicaklikResult.Content;
-                Debug.WriteLine($"7");
-                var yuzdeResult = _plcClient.ReadInt16("D7752");
+
+                var yuzdeResult = _plcClient.ReadInt16(PROSES_YUZDESI);
                 if (!yuzdeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(yuzdeResult);
                 status.ProsesYuzdesi = yuzdeResult.Content;
-                Debug.WriteLine($"8");
-                var makineTipiResult = ReadStringFromWords("D6100", 10);
+
+                var makineTipiResult = ReadStringFromWords(MAKINE_TIPI, 10);
                 if (!makineTipiResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(makineTipiResult);
                 status.MakineTipi = makineTipiResult.Content;
-                Debug.WriteLine($"9");
-                var siparisNoResult = ReadStringFromWords("D6110", 10);
+
+                var siparisNoResult = ReadStringFromWords(SIPARIS_NO, 10);
                 if (!siparisNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(siparisNoResult);
                 status.SiparisNumarasi = siparisNoResult.Content;
-                Debug.WriteLine($"10");
-                var musteriNoResult = ReadStringFromWords("D6120", 10);
+
+                var musteriNoResult = ReadStringFromWords(MUSTERI_NO, 10);
                 if (!musteriNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(musteriNoResult);
                 status.MusteriNumarasi = musteriNoResult.Content;
-                Debug.WriteLine($"11");
-                var batchNoResult = ReadStringFromWords("D6130", 10);
+
+                var batchNoResult = ReadStringFromWords(BATCH_NO, 10);
                 if (!batchNoResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(batchNoResult);
                 status.BatchNumarasi = batchNoResult.Content;
-                Debug.WriteLine($"12");
-                // 10 karakter = 5 word
-                var operatorResult = ReadStringFromWords("D6460", 5);
+
+                var operatorResult = ReadStringFromWords(OPERATOR_ISMI, 5);
                 if (!operatorResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(operatorResult);
                 status.OperatorIsmi = operatorResult.Content;
-                Debug.WriteLine($"13");
-                var recipeNameResult = ReadStringFromWords("D2550", 5);
+
+                var recipeNameResult = ReadStringFromWords(RECETE_ADI, 5);
                 if (!recipeNameResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(recipeNameResult);
                 status.RecipeName = recipeNameResult.Content;
 
-                var suResult = _plcClient.ReadInt16("D7702");
+                var suResult = _plcClient.ReadInt16(SU_MIKTARI);
                 if (!suResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(suResult);
                 status.SuMiktari = suResult.Content;
 
-                var elektrikResult = _plcClient.ReadInt16("D7720");
+                var elektrikResult = _plcClient.ReadInt16(ELEKTRIK_HARCAMA);
                 if (!elektrikResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(elektrikResult);
                 status.ElektrikHarcama = elektrikResult.Content;
 
-                var buharResult = _plcClient.ReadInt16("D7744");
+                var buharResult = _plcClient.ReadInt16(BUHAR_HARCAMA);
                 if (!buharResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(buharResult);
                 status.BuharHarcama = buharResult.Content;
 
-                status.ConnectionState = ConnectionStatus.Connected;
-                return OperateResult.CreateSuccessResult(status);
-
                 // YENİ: Çalışma Süresini Oku
-                var runTimeResult = _plcClient.ReadInt16("D7750");
+                var runTimeResult = _plcClient.ReadInt16(CALISMA_SURESI);
                 if (!runTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(runTimeResult);
                 status.CalismaSuresiDakika = runTimeResult.Content;
 
                 // --- YENİ: OEE VERİLERİNİ OKUMA ---
-                var isProductionResult = _plcClient.ReadBool("M2501");
+                var isProductionResult = _plcClient.ReadBool(AKTIF_CALISMA);
                 if (!isProductionResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(isProductionResult);
                 status.IsMachineInProduction = isProductionResult.Content;
 
-                var downTimeResult = _plcClient.ReadInt32("D7764"); // 32-bit (Double Word)
+                // Toplam duruş süresini oku (32-bit)
+                var downTimeResult = _plcClient.ReadInt32(TOPLAM_DURUS_SURESI_SN);
                 if (!downTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(downTimeResult);
-                status.TotalDownTimeSeconds = downTimeResult.Content;
+                // Bu değeri kullanacağınız modeldeki ilgili alana atayın. Örnek:
+                // status.TotalDownTimeSeconds = downTimeResult.Content;
 
-                var cycleTimeResult = _plcClient.ReadInt16("D6411"); // 16-bit (Word)
+                // Standart çevrim süresini oku (16-bit)
+                var cycleTimeResult = _plcClient.ReadInt16(STANDART_CEVRIM_SURESI_DK);
                 if (!cycleTimeResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(cycleTimeResult);
-                status.StandardCycleTimeMinutes = cycleTimeResult.Content;
+                // Bu değeri kullanacağınız modeldeki ilgili alana atayın. Örnek:
+                // status.StandardCycleTimeMinutes = cycleTimeResult.Content;
 
-                var totalProdResult = _plcClient.ReadInt16("D7768"); // 16-bit (Word)
+                // Toplam üretim adedini oku (16-bit)
+                var totalProdResult = _plcClient.ReadInt16(TOPLAM_URETIM_ADEDI);
                 if (!totalProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(totalProdResult);
-                status.TotalProductionCount = totalProdResult.Content;
+                // Bu değeri kullanacağınız modeldeki ilgili alana atayın. Örnek:
+                // status.TotalProductionCount = totalProdResult.Content;
 
-                var defectiveProdResult = _plcClient.ReadInt16("D7770"); // 16-bit (Word)
+                // Hatalı üretim adedini oku (16-bit)
+                var defectiveProdResult = _plcClient.ReadInt16(HATALI_URETIM_ADEDI);
                 if (!defectiveProdResult.IsSuccess) return OperateResult.CreateFailedResult<FullMachineStatus>(defectiveProdResult);
-                status.DefectiveProductionCount = defectiveProdResult.Content;
+                // Bu değeri kullanacağınız modeldeki ilgili alana atayın. Örnek:
+                // status.DefectiveProductionCount = defectiveProdResult.Content;
+
+                status.ConnectionState = ConnectionStatus.Connected;
+                return OperateResult.CreateSuccessResult(status);
+
+                
             }
             catch (Exception ex)
             {

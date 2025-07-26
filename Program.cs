@@ -1,8 +1,11 @@
 // Program.cs
 using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows.Forms;
-using TekstilScada.UI; // LoginForm'a eriþmek için eklendi
-
+using TekstilScada.Core;
+using TekstilScada.UI;
+using TekstilScada.Properties; // Settings için eklendi
 namespace TekstilScada
 {
     internal static class Program
@@ -13,23 +16,32 @@ namespace TekstilScada
         [STAThread]
         static void Main()
         {
+            // --- YENÝ: DÝL AYARLARI ---
+            // Uygulamanýn varsayýlan dilini Türkçe olarak ayarlýyoruz.
+            // Bu, .resx dosyalarýndan doðru olanýn seçilmesini saðlar.
+            // --- YENÝ: KAYITLI DÝLÝ YÜKLEME ---
+            // Kullanýcýnýn son seçtiði dili ayar dosyasýndan oku.
+            // --- YENÝ: KAYITLI DÝLÝ YÜKLEME ---
+            // Kullanýcýnýn son seçtiði dili ayar dosyasýndan oku.
+            string savedLanguage = Settings.Default.UserLanguage;
+            if (!string.IsNullOrEmpty(savedLanguage))
+            {
+                // Eðer bir dil kayýtlýysa, LanguageManager aracýlýðýyla uygula.
+                LanguageManager.SetLanguage(savedLanguage);
+            }
+            // --- YÜKLEME SONU ---
+
+            // --- DÝL AYARLARI SONU ---
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // YENÝ: Program baþlangýç mantýðý güncellendi.
-
-            // 1. Login formunu oluþtur ve göster.
             using (var loginForm = new LoginForm())
             {
-                // Eðer kullanýcý "Giriþ Yap" butonuna basarsa (DialogResult.OK),
-                // ve giriþ baþarýlý olursa, ana formu aç.
                 if (loginForm.ShowDialog() == DialogResult.OK)
                 {
-                    // Giriþ baþarýlý olduðu için ana formu çalýþtýr.
                     Application.Run(new MainForm());
                 }
-                // Eðer kullanýcý "Ýptal" butonuna basarsa veya formu kapatýrsa,
-                // uygulama sessizce kapanýr.
             }
         }
     }

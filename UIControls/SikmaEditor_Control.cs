@@ -7,7 +7,7 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
 {
     public partial class SikmaEditor_Control : UserControl
     {
-        private ScadaRecipeStep _step;
+        private SikmaParams _params;
         public event EventHandler ValueChanged;
 
         public SikmaEditor_Control()
@@ -19,20 +19,20 @@ namespace TekstilScada.UI.Controls.RecipeStepEditors
 
         public void LoadStep(ScadaRecipeStep step)
         {
-            _step = step;
-            numSikmaDevri.Value = _step.StepDataWords[8];
-            numSikmaSure.Value = _step.StepDataWords[9];
+            _params = new SikmaParams(step.StepDataWords);
+
+            numSikmaDevri.Value = _params.SikmaDevri;
+            numSikmaSure.Value = _params.SikmaSure;
         }
 
         private void OnValueChanged(object sender, EventArgs e)
         {
-            if (_step == null) return;
-            _step.StepDataWords[8] = (short)numSikmaDevri.Value;
-            _step.StepDataWords[9] = (short)numSikmaSure.Value;
+            if (_params == null) return;
+
+            _params.SikmaDevri = (short)numSikmaDevri.Value;
+            _params.SikmaSure = (short)numSikmaSure.Value;
+
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
-// --------------------------------------------------------------------
-// UI/Controls/RecipeStepEditors/SikmaEditor_Control.Designer.cs
-// ... (Tasarımcı kodu buraya gelecek. İki NumericUpDown ve iki Label içerir.) ...

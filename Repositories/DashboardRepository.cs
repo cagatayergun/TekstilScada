@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TekstilScada.Models;
+using TekstilScada.Core; // Bu satırı ekleyin
 namespace TekstilScada.Repositories
 {
     public class DashboardRepository
     {
-        private readonly string _connectionString = "server=localhost;port=3306;database=scada_db;user=user1;password=Cagatay.19;";
+        private readonly string _connectionString = AppConfig.ConnectionString;
 
         public List<OeeData> GetOeeReport(DateTime startTime, DateTime endTime, int? machineId)
         {
