@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using TekstilScada.Core;
 using TekstilScada.UI;
 using TekstilScada.Properties; // Settings için eklendi
+
 namespace TekstilScada
 {
     internal static class Program

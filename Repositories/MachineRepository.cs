@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TekstilScada.Models;
 using TekstilScada.Core; // Bu satırı ekleyin
+
+
 namespace TekstilScada.Repositories
 {
     public class MachineRepository
     {
         private readonly string _connectionString = AppConfig.ConnectionString;
+       
 
         public List<Machine> GetAllMachines()
         {

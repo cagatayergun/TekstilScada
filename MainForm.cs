@@ -11,6 +11,7 @@ using TekstilScada.Services;
 using TekstilScada.UI;
 using TekstilScada.UI.Controls;
 using TekstilScada.UI.Views;
+
 using TekstilScada.Properties;
 namespace TekstilScada
 {
@@ -74,8 +75,19 @@ namespace TekstilScada
             ApplyLocalization();
             UpdateUserInfoAndPermissions();
             ReloadSystem();
+            ApplyPermissions(); // YENÝ: Yetkileri uygula
         }
+        private void ApplyPermissions()
+        {
+            // Raporlar butonunu sadece yetkisi olanlar görebilir/kullanabilir.
+            btnRaporlar.Enabled = PermissionService.CanViewReports;
 
+            // Proses Kontrol (Reçete) butonunu yetkisi olanlar kullanabilir.
+            btnProsesKontrol.Enabled = PermissionService.CanEditRecipes;
+
+            // Ayarlar butonunu sadece Admin görebilir/kullanabilir.
+            btnAyarlar.Enabled = PermissionService.CanViewSettings;
+        }
         private void ReloadSystem()
         {
             _pollingService.Stop();
@@ -136,12 +148,18 @@ namespace TekstilScada
 
         private void ShowView(UserControl view)
         {
-            if (view is Ayarlar_Control && !CurrentUser.HasRole("Admin"))
-            {
+            if (view is Ayarlar_Control && !PermissionService.CanViewSettings)
+            
+                {
                 MessageBox.Show($"{Resources.NoAccess}.", $"{ Resources.AccessDenied}");
                 return;
             }
-            pnlContent.Controls.Clear();
+            if (view is Raporlar_Control && !PermissionService.CanViewReports)
+            {
+                MessageBox.Show($"{Resources.NoAccess}.", $"{Resources.AccessDenied}");
+                return;
+            }
+                pnlContent.Controls.Clear();
             view.Dock = DockStyle.Fill;
             pnlContent.Controls.Add(view);
         }

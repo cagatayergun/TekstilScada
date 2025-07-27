@@ -21,6 +21,9 @@ namespace TekstilScada.UI.Views
         {
             InitializeComponent();
             ApplyLocalization();
+            // Load event'ini manuel olarak bağlayalım
+            this.Load += TrendAnaliz_Control_Load;
+            btnGenerateChart.Click += btnGenerateChart_Click;
         }
         private void ApplyLocalization()
         {
@@ -48,7 +51,7 @@ namespace TekstilScada.UI.Views
             dtpStartTime.Value = DateTime.Now.AddHours(-1);
             dtpEndTime.Value = DateTime.Now;
 
-            var machines = _machineRepository.GetAllEnabledMachines();
+            var machines = _machineRepository.GetAllMachines();
             clbMachines.DataSource = machines;
             clbMachines.DisplayMember = "DisplayInfo";
             clbMachines.ValueMember = "Id";
@@ -64,55 +67,49 @@ namespace TekstilScada.UI.Views
             }
 
             this.Cursor = Cursors.WaitCursor;
-            formsPlot1.Plot.Clear();
-            formsPlot1.Plot.Title("Proses Veri Trendleri");
-            formsPlot1.Plot.Axes.DateTimeTicksBottom();
-
-            // HATA GİDERİLDİ: ScottPlot.Color'a dönüştürüldü
-            var colors = new ScottPlot.Color[] { ScottPlot.Colors.Red, ScottPlot.Colors.Blue, ScottPlot.Colors.Green, ScottPlot.Colors.Orange, ScottPlot.Colors.Purple };
-            int colorIndex = 0;
-
-            foreach (var machineId in selectedMachineIds)
+            try
             {
-                var machine = clbMachines.Items.OfType<Machine>().FirstOrDefault(m => m.Id == machineId);
-                // GetLogsForBatch metoduna null batchId gönderiyoruz
-                var dataPoints = _processLogRepository.GetLogsForBatch(machineId, null, dtpStartTime.Value, dtpEndTime.Value);
+                var dataPoints = _processLogRepository.GetLogsForDateRange(dtpStartTime.Value, dtpEndTime.Value, selectedMachineIds);
+
+                formsPlot1.Plot.Clear();
 
                 if (dataPoints.Any())
                 {
-                    double[] timeData = dataPoints.Select(p => p.Timestamp.ToOADate()).ToArray();
+                    // Verileri makinelere göre grupla
+                    var groupedData = dataPoints.GroupBy(d => d.MachineId);
 
-                    if (chkTemperature.Checked)
+                    foreach (var group in groupedData)
                     {
-                        double[] tempData = dataPoints.Select(p => (double)p.Temperature).ToArray();
-                        var plot = formsPlot1.Plot.Add.Scatter(timeData, tempData);
-                        plot.Color = colors[colorIndex % colors.Length]; // HATA GİDERİLDİ
-                        plot.LegendText = $"{machine.MachineName} Sıcaklık";
+                        var machineName = (clbMachines.DataSource as List<Machine>)?.FirstOrDefault(m => m.Id == group.Key)?.MachineName ?? $"Makine {group.Key}";
+
+                        double[] timeData = group.Select(p => p.Timestamp.ToOADate()).ToArray();
+                        double[] tempData = group.Select(p => (double)p.Temperature).ToArray();
+
+                        var scatter = formsPlot1.Plot.Add.Scatter(timeData, tempData);
+                        scatter.LegendText = $"{machineName} - Sıcaklık";
+                        scatter.LineWidth = 2;
                     }
-                    if (chkWaterLevel.Checked)
-                    {
-                        double[] waterData = dataPoints.Select(p => (double)p.WaterLevel).ToArray();
-                        var plot = formsPlot1.Plot.Add.Scatter(timeData, waterData);
-                        plot.Color = colors[(colorIndex + 1) % colors.Length]; // HATA GİDERİLDİ
-                        plot.LegendText = $"{machine.MachineName} Su Seviyesi";
-                        plot.LineStyle.Pattern = ScottPlot.LinePattern.Dashed;
-                    }
-                    if (chkRpm.Checked)
-                    {
-                        double[] rpmData = dataPoints.Select(p => (double)p.Rpm).ToArray();
-                        var plot = formsPlot1.Plot.Add.Scatter(timeData, rpmData);
-                        plot.Color = colors[(colorIndex + 2) % colors.Length]; // HATA GİDERİLDİ
-                        plot.LegendText = $"{machine.MachineName} Devir";
-                        plot.LineStyle.Pattern = ScottPlot.LinePattern.Dotted;
-                    }
+
+                    formsPlot1.Plot.Axes.DateTimeTicksBottom();
+                    formsPlot1.Plot.Title("Proses Değişkenleri Trend Grafiği");
+                    formsPlot1.Plot.ShowLegend();
+                    formsPlot1.Plot.Axes.AutoScale();
                 }
-                colorIndex++;
-            }
+                else
+                {
+                    formsPlot1.Plot.Title("Seçilen aralıkta veri bulunamadı.");
+                }
 
-            formsPlot1.Plot.ShowLegend(ScottPlot.Alignment.UpperLeft);
-            formsPlot1.Plot.Axes.AutoScale();
-            formsPlot1.Refresh();
-            this.Cursor = Cursors.Default;
+                formsPlot1.Refresh();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Grafik oluşturulurken bir hata oluştu: {ex.Message}", "Hata");
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
     }
 }

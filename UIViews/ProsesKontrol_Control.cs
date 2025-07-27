@@ -56,6 +56,23 @@ namespace TekstilScada.UI.Views
             LoadRecipeList();
             LoadMachineList();
             ApplyRolePermissions(); // YENİ: Yetki kontrolünü çağır
+            ApplyPermissions(); // YENİ: Bu ekran için yetkileri uygula
+        }
+        private void ApplyPermissions()
+        {
+            // Reçete kaydetme yetkisi kontrolü
+            btnSaveRecipe.Enabled = PermissionService.CanEditRecipes;
+
+            // Reçete silme yetkisi kontrolü (sadece Admin silebilir)
+            btnDeleteRecipe.Enabled = PermissionService.CanDeleteRecipes;
+
+            // PLC'ye gönderme yetkisi kontrolü
+            btnSendToPlc.Enabled = PermissionService.CanTransferToPlc;
+            btnReadFromPlc.Enabled = PermissionService.CanTransferToPlc;
+            btnFtpSync.Enabled = PermissionService.CanTransferToPlc;
+
+            // Reçete Adı metin kutusunu sadece yetkisi olanlar düzenleyebilir
+            txtRecipeName.ReadOnly = !PermissionService.CanEditRecipes;
         }
         private void ApplyRolePermissions()
         {

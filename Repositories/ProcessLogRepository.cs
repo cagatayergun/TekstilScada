@@ -162,11 +162,68 @@ namespace TekstilScada.Repositories
 
             return summary;
         }
+        public List<ProcessDataPoint> GetLogsForDateRange(DateTime startTime, DateTime endTime, List<int> machineIds)
+        {
+            var dataPoints = new List<ProcessDataPoint>();
+            // Eğer seçili makine yoksa, boş liste döndür.
+            if (machineIds == null || !machineIds.Any())
+            {
+                return dataPoints;
+            }
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT MachineId, LogTimestamp, LiveTemperature, LiveWaterLevel, LiveRpm FROM process_data_log ");
+                queryBuilder.Append("WHERE LogTimestamp BETWEEN @StartTime AND @EndTime ");
+
+                // Seçilen makine ID'lerini sorguya parametre olarak ekle
+                queryBuilder.Append("AND MachineId IN (");
+                var machineParams = new List<string>();
+                for (int i = 0; i < machineIds.Count; i++)
+                {
+                    var paramName = $"@MachineId{i}";
+                    machineParams.Add(paramName);
+                }
+                queryBuilder.Append(string.Join(",", machineParams));
+                queryBuilder.Append(") ORDER BY LogTimestamp;");
+
+                var cmd = new MySqlCommand(queryBuilder.ToString(), connection);
+                cmd.Parameters.AddWithValue("@StartTime", startTime);
+                cmd.Parameters.AddWithValue("@EndTime", endTime);
+                for (int i = 0; i < machineIds.Count; i++)
+                {
+                    cmd.Parameters.AddWithValue($"@MachineId{i}", machineIds[i]);
+                }
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        dataPoints.Add(new ProcessDataPoint
+                        {
+                            // MachineId'yi de modele eklemek ileride faydalı olabilir,
+                            // şimdilik bu şekilde bırakıyoruz.
+                            MachineId = reader.GetInt32("MachineId"),
+                            Timestamp = reader.GetDateTime("LogTimestamp"),
+                            Temperature = reader.GetDecimal("LiveTemperature"),
+                            WaterLevel = reader.GetDecimal("LiveWaterLevel"),
+                            Rpm = reader.GetInt32("LiveRpm")
+                        });
+                    }
+                }
+            }
+            return dataPoints;
+        }
     }
+
     
     // Grafik için veri noktası modeli
     public class ProcessDataPoint
     {
+        public int MachineId { get; set; }
         public DateTime Timestamp { get; set; }
         public decimal Temperature { get; set; }
         public decimal WaterLevel { get; set; }

@@ -9,21 +9,22 @@ using System.Data;
 using TekstilScada.Core; // Bu satırı ekleyin
 namespace TekstilScada.Repositories
 {
+    public class ReportFilters
+    {
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public int? MachineId { get; set; }
+        public string BatchNo { get; set; }
+        public string RecipeName { get; set; }
+        public string SiparisNo { get; set; }
+        public string MusteriNo { get; set; }
+        public string OperatorName { get; set; }
+    }
     public class ProductionRepository
     {
         private readonly string _connectionString = AppConfig.ConnectionString;
 
-        public class ReportFilters
-        {
-            public DateTime StartTime { get; set; }
-            public DateTime EndTime { get; set; }
-            public int? MachineId { get; set; }
-            public string BatchNo { get; set; }
-            public string RecipeName { get; set; }
-            public string SiparisNo { get; set; }
-            public string MusteriNo { get; set; }
-            public string OperatorName { get; set; }
-        }
+        
 
         // ... Bu dosyanın geri kalan tüm metotları aynı kalacak ...
         // (GetProductionReport, StartNewBatch, EndBatch vb.)
