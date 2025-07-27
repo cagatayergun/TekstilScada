@@ -25,7 +25,7 @@ namespace TekstilScada
         private readonly ProductionRepository _productionRepository;
         private readonly PlcPollingService _pollingService;
         private readonly DashboardRepository _dashboardRepository;
-
+        private readonly FtpServerService _ftpServerService;
         // Arayüz Kontrolleri (Views)
         private readonly ProsesÝzleme_Control _prosesIzlemeView;
         private readonly ProsesKontrol_Control _prosesKontrolView;
@@ -50,7 +50,7 @@ namespace TekstilScada
             _productionRepository = new ProductionRepository();
             _pollingService = new PlcPollingService();
             _dashboardRepository = new DashboardRepository();
-
+            _ftpServerService = new FtpServerService();
             _prosesIzlemeView = new ProsesÝzleme_Control();
             _prosesKontrolView = new ProsesKontrol_Control();
             _ayarlarView = new Ayarlar_Control();
@@ -68,10 +68,12 @@ namespace TekstilScada
             _makineDetayView.BackRequested += OnBackRequested;
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             // 2. ADIM: Form tamamen yüklendikten sonra bu metot çalýþýr.
             // Veritabaný ve PLC iþlemlerini baþlatan metotlar burada çaðrýlýr.
+            await _ftpServerService.StartAsync();
+
             ApplyLocalization();
             UpdateUserInfoAndPermissions();
             ReloadSystem();
@@ -292,6 +294,10 @@ namespace TekstilScada
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             LanguageManager.LanguageChanged -= LanguageManager_LanguageChanged;
+            // VNC formunu kapatma
+            // VNC formunu kapatma
+
+            _ftpServerService.StopAsync();
             _pollingService.Stop();
             if (_activeVncViewerForm != null && !_activeVncViewerForm.IsDisposed)
             {

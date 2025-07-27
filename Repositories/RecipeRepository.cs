@@ -1,18 +1,73 @@
-﻿// Repositories/RecipeRepository.cs
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.IO; // Dosya işlemleri için eklendi
 using TekstilScada.Models;
-using TekstilScada.Core; // Bu satırı ekleyin
+using TekstilScada.Core;
+using TekstilScada.Services;
+
 namespace TekstilScada.Repositories
 {
     public class RecipeRepository
     {
         private readonly string _connectionString = AppConfig.ConnectionString;
 
+        // YENİ METOT: Reçeteyi bir .csv dosyası olarak FTP klasörüne kaydeder.
+        private void SaveRecipeAsCsv(ScadaRecipe recipe)
+        {
+            try
+            {
+                // HATA GİDERİLDİ: Dosya yolu, daha güvenilir olan "Belgelerim" klasörü olarak değiştirildi.
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string ftpPath = Path.Combine(documentsPath, "TekstilScada_FtpRecipes");
+
+                // YENİ LOG: Hangi klasöre yazmaya çalıştığımızı loglayalım.
+                LiveEventAggregator.Instance.Publish(new Models.LiveEvent
+                {
+                    Type = Models.EventType.SystemInfo,
+                    Source = "Recipe Export",
+                    Message = $"Reçete klasörü kontrol ediliyor: {ftpPath}"
+                });
+
+                if (!Directory.Exists(ftpPath))
+                {
+                    Directory.CreateDirectory(ftpPath);
+                    // YENİ LOG: Klasörün oluşturulduğunu bildirelim.
+                    LiveEventAggregator.Instance.Publish(new Models.LiveEvent
+                    {
+                        Type = Models.EventType.SystemInfo,
+                        Source = "Recipe Export",
+                        Message = "FtpRecipes klasörü başarıyla oluşturuldu."
+                    });
+                }
+
+                string csvContent = RecipeCsvConverter.ToCsv(recipe);
+                string fileName = $"RECIPE_{recipe.Id}.csv";
+                string fullPath = Path.Combine(ftpPath, fileName);
+
+                File.WriteAllText(fullPath, csvContent);
+
+                // YENİ LOG: Dosyanın başarıyla yazıldığını bildirelim.
+                LiveEventAggregator.Instance.Publish(new Models.LiveEvent
+                {
+                    Type = Models.EventType.SystemSuccess,
+                    Source = "Recipe Export",
+                    Message = $"Reçete başarıyla CSV olarak kaydedildi: {fileName}"
+                });
+            }
+            catch (Exception ex)
+            {
+                LiveEventAggregator.Instance.Publish(new Models.LiveEvent
+                {
+                    Type = Models.EventType.SystemWarning,
+                    Source = "Recipe Export",
+                    Message = $"CSV dosyası oluşturulamadı: {ex.Message}"
+                });
+            }
+        }
+
         public void SaveRecipe(ScadaRecipe recipe)
         {
-            // Bu metot daha önce oluşturuldu, Id kontrolü eklenerek güncellendi.
             if (recipe.Id > 0)
             {
                 UpdateRecipe(recipe);
@@ -48,12 +103,14 @@ namespace TekstilScada.Repositories
                             stepCmd.Parameters.AddWithValue("@StepNumber", step.StepNumber);
                             for (int i = 0; i <= 24; i++)
                             {
-                                if (i >= 21 && i <= 23) continue; // String alanları atla
+                                if (i >= 21 && i <= 23) continue;
                                 stepCmd.Parameters.AddWithValue($"@Word{i}", step.StepDataWords[i]);
                             }
                             stepCmd.ExecuteNonQuery();
                         }
                         transaction.Commit();
+
+                        SaveRecipeAsCsv(recipe);
                     }
                     catch (Exception)
                     {
@@ -73,23 +130,19 @@ namespace TekstilScada.Repositories
                 {
                     try
                     {
-                        // 1. Ana reçete adını güncelle
                         string recipeQuery = "UPDATE recipes SET RecipeName = @RecipeName WHERE Id = @Id;";
                         var recipeCmd = new MySqlCommand(recipeQuery, connection, transaction);
                         recipeCmd.Parameters.AddWithValue("@RecipeName", recipe.RecipeName);
                         recipeCmd.Parameters.AddWithValue("@Id", recipe.Id);
                         recipeCmd.ExecuteNonQuery();
 
-                        // 2. Bu reçeteye ait eski adımları sil
                         string deleteStepsQuery = "DELETE FROM recipe_steps WHERE RecipeId = @RecipeId;";
                         var deleteCmd = new MySqlCommand(deleteStepsQuery, connection, transaction);
                         deleteCmd.Parameters.AddWithValue("@RecipeId", recipe.Id);
                         deleteCmd.ExecuteNonQuery();
 
-                        // 3. Yeni/güncellenmiş adımları ekle
                         foreach (var step in recipe.Steps)
                         {
-                            // Adım ekleme sorgusu (AddRecipe ile aynı)
                             string stepQuery = "INSERT INTO recipe_steps (RecipeId, StepNumber, Word0, Word1, Word2, Word3, Word4, Word5, Word6, Word7, Word8, Word9, Word10, Word11, Word12, Word13, Word14, Word15, Word16, Word17, Word18, Word19, Word20, Word24) " +
                                               "VALUES (@RecipeId, @StepNumber, @Word0, @Word1, @Word2, @Word3, @Word4, @Word5, @Word6, @Word7, @Word8, @Word9, @Word10, @Word11, @Word12, @Word13, @Word14, @Word15, @Word16, @Word17, @Word18, @Word19, @Word20, @Word24);";
                             var stepCmd = new MySqlCommand(stepQuery, connection, transaction);
@@ -103,13 +156,35 @@ namespace TekstilScada.Repositories
                             stepCmd.ExecuteNonQuery();
                         }
                         transaction.Commit();
+
+                        SaveRecipeAsCsv(recipe);
                     }
                     catch (Exception) { transaction.Rollback(); throw; }
                 }
             }
         }
 
-        // YENİ: Hata veren eksik metot eklendi.
+        public void DeleteRecipe(int recipeId)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+                string query = "DELETE FROM recipes WHERE Id = @Id;";
+                var cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Id", recipeId);
+                cmd.ExecuteNonQuery();
+
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string ftpPath = Path.Combine(documentsPath, "TekstilScada_FtpRecipes");
+                string filePath = Path.Combine(ftpPath, $"RECIPE_{recipeId}.csv");
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
+        }
+
+        // ... Diğer metotlar (GetAllRecipes, GetRecipeById, GetRecipeUsageHistory) aynı kalacak ...
         public List<ScadaRecipe> GetAllRecipes()
         {
             var recipes = new List<ScadaRecipe>();
@@ -133,19 +208,6 @@ namespace TekstilScada.Repositories
             }
             return recipes;
         }
-        public void DeleteRecipe(int recipeId)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                connection.Open();
-                // ON DELETE CASCADE sayesinde, sadece ana reçeteyi silmek yeterlidir.
-                string query = "DELETE FROM recipes WHERE Id = @Id;";
-                var cmd = new MySqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("@Id", recipeId);
-                cmd.ExecuteNonQuery();
-            }
-        }
-        // YENİ: Hata veren eksik metot eklendi.
         public ScadaRecipe GetRecipeById(int recipeId)
         {
             ScadaRecipe recipe = null;
@@ -171,7 +233,6 @@ namespace TekstilScada.Repositories
 
                 if (recipe != null)
                 {
-                    // Adımları yükle
                     string stepsQuery = "SELECT * FROM recipe_steps WHERE RecipeId = @RecipeId ORDER BY StepNumber;";
                     var stepsCmd = new MySqlCommand(stepsQuery, connection);
                     stepsCmd.Parameters.AddWithValue("@RecipeId", recipeId);
@@ -235,8 +296,6 @@ namespace TekstilScada.Repositories
                             CycleTime = reader.IsDBNull(reader.GetOrdinal("CycleTime"))
                                         ? "N/A"
                                         : reader.GetTimeSpan(reader.GetOrdinal("CycleTime")).ToString(@"hh\:mm\:ss"),
-
-                            // GÜNCELLENDİ: Tüketim verileri artık okunuyor.
                             TotalWater = reader.IsDBNull(reader.GetOrdinal("TotalWater")) ? 0 : reader.GetInt32("TotalWater"),
                             TotalElectricity = reader.IsDBNull(reader.GetOrdinal("TotalElectricity")) ? 0 : reader.GetInt32("TotalElectricity"),
                             TotalSteam = reader.IsDBNull(reader.GetOrdinal("TotalSteam")) ? 0 : reader.GetInt32("TotalSteam")
