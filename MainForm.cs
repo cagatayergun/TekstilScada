@@ -207,7 +207,8 @@ namespace TekstilScada
             var machine = _machineRepository.GetAllMachines().FirstOrDefault(m => m.Id == machineId);
             if (machine != null)
             {
-                _makineDetayView.InitializeControl(machine, _pollingService, _processLogRepository);
+                // YENÝ: Alarm ve Reçete repository'leri de metoda gönderiliyor.
+                _makineDetayView.InitializeControl(machine, _pollingService, _processLogRepository, _alarmRepository, _recipeRepository);
                 ShowView(_makineDetayView);
             }
         }

@@ -1,322 +1,563 @@
-﻿// UI/Views/MakineDetay_Control.Designer.cs
-namespace TekstilScada.UI.Views
+﻿namespace TekstilScada.UI.Views
 {
     partial class MakineDetay_Control
     {
         private System.ComponentModel.IContainer components = null;
+
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null)) { components.Dispose(); }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
             base.Dispose(disposing);
         }
+
         #region Component Designer generated code
+
         private void InitializeComponent()
         {
-            this.pnlTop = new System.Windows.Forms.Panel();
-            this.btnGeri = new System.Windows.Forms.Button();
-            this.pnlInfo = new System.Windows.Forms.Panel();
-            this.lblSiparisNo = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.lblBatchNo = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lblMusteriNo = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lblOperator = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lblReceteAdi = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lblMakineAdi = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pnlGauges = new System.Windows.Forms.Panel();
-            this.lblWaterValue = new System.Windows.Forms.Label();
-            this.lblWaterTitle = new System.Windows.Forms.Label();
-            this.lblTempValue = new System.Windows.Forms.Label();
-            this.lblTempTitle = new System.Windows.Forms.Label();
-            this.lblRpmValue = new System.Windows.Forms.Label();
-            this.lblRpmTitle = new System.Windows.Forms.Label();
-            this.pnlTimeline = new System.Windows.Forms.Panel();
-            this.formsPlot1 = new ScottPlot.WinForms.FormsPlot();
-            this.pnlTop.SuspendLayout();
-            this.pnlInfo.SuspendLayout();
-            this.pnlGauges.SuspendLayout();
-            this.pnlTimeline.SuspendLayout();
-            this.SuspendLayout();
+            pnlTop = new Panel();
+            btnGeri = new Button();
+            lblMakineAdi = new Label();
+            pnlMainContent = new Panel();
+            tableLayoutPanelMain = new TableLayoutPanel();
+            pnlTopDashboard = new Panel();
+            tableLayoutPanelTop = new TableLayoutPanel();
+            pnlGaugesAndInfo = new Panel();
+            pnlAlarmsAndSteps = new Panel();
+            dgvAdimlar = new DataGridView();
+            label10 = new Label();
+            lblCalisanAdim = new Label();
+            label8 = new Label();
+            lstAlarmlar = new ListBox();
+            label7 = new Label();
+            pnlGauges = new Panel();
+            waterTankGauge1 = new Controls.WaterTankGauge();
+            panelTemp = new Panel();
+            lblTempValue = new Label();
+            lblTempTitle = new Label();
+            progressTemp = new ProgressBar();
+            gaugeRpm = new CircularProgressBar.CircularProgressBar();
+            pnlInfo = new Panel();
+            lblSiparisNo = new Label();
+            label6 = new Label();
+            lblBatchNo = new Label();
+            label5 = new Label();
+            lblMusteriNo = new Label();
+            label4 = new Label();
+            lblOperator = new Label();
+            label3 = new Label();
+            lblReceteAdi = new Label();
+            label2 = new Label();
+            label1 = new Label();
+            pnlTimeline = new Panel();
+            formsPlot1 = new ScottPlot.WinForms.FormsPlot();
+            pnlTop.SuspendLayout();
+            pnlMainContent.SuspendLayout();
+            tableLayoutPanelMain.SuspendLayout();
+            pnlTopDashboard.SuspendLayout();
+            tableLayoutPanelTop.SuspendLayout();
+            pnlGaugesAndInfo.SuspendLayout();
+            pnlAlarmsAndSteps.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvAdimlar).BeginInit();
+            pnlGauges.SuspendLayout();
+            panelTemp.SuspendLayout();
+            pnlInfo.SuspendLayout();
+            pnlTimeline.SuspendLayout();
+            SuspendLayout();
             // 
             // pnlTop
             // 
-            this.pnlTop.Controls.Add(this.btnGeri);
-            this.pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTop.Location = new System.Drawing.Point(0, 0);
-            this.pnlTop.Name = "pnlTop";
-            this.pnlTop.Size = new System.Drawing.Size(1000, 50);
-            this.pnlTop.TabIndex = 0;
+            pnlTop.Controls.Add(btnGeri);
+            pnlTop.Controls.Add(lblMakineAdi);
+            pnlTop.Dock = DockStyle.Top;
+            pnlTop.Location = new Point(0, 0);
+            pnlTop.Margin = new Padding(3, 2, 3, 2);
+            pnlTop.Name = "pnlTop";
+            pnlTop.Size = new Size(1358, 38);
+            pnlTop.TabIndex = 1;
             // 
             // btnGeri
             // 
-            this.btnGeri.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnGeri.Location = new System.Drawing.Point(15, 10);
-            this.btnGeri.Name = "btnGeri";
-            this.btnGeri.Size = new System.Drawing.Size(94, 29);
-            this.btnGeri.TabIndex = 0;
-            this.btnGeri.Text = "< GERİ";
-            this.btnGeri.UseVisualStyleBackColor = true;
-            // 
-            // pnlInfo
-            // 
-            this.pnlInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlInfo.Controls.Add(this.lblSiparisNo);
-            this.pnlInfo.Controls.Add(this.label6);
-            this.pnlInfo.Controls.Add(this.lblBatchNo);
-            this.pnlInfo.Controls.Add(this.label5);
-            this.pnlInfo.Controls.Add(this.lblMusteriNo);
-            this.pnlInfo.Controls.Add(this.label4);
-            this.pnlInfo.Controls.Add(this.lblOperator);
-            this.pnlInfo.Controls.Add(this.label3);
-            this.pnlInfo.Controls.Add(this.lblReceteAdi);
-            this.pnlInfo.Controls.Add(this.label2);
-            this.pnlInfo.Controls.Add(this.lblMakineAdi);
-            this.pnlInfo.Controls.Add(this.label1);
-            this.pnlInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlInfo.Location = new System.Drawing.Point(0, 50);
-            this.pnlInfo.Name = "pnlInfo";
-            this.pnlInfo.Size = new System.Drawing.Size(1000, 150);
-            this.pnlInfo.TabIndex = 1;
-            // 
-            // lblSiparisNo
-            // 
-            this.lblSiparisNo.AutoSize = true;
-            this.lblSiparisNo.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblSiparisNo.Location = new System.Drawing.Point(500, 110);
-            this.lblSiparisNo.Name = "lblSiparisNo";
-            this.lblSiparisNo.Size = new System.Drawing.Size(27, 23);
-            this.lblSiparisNo.TabIndex = 11;
-            this.lblSiparisNo.Text = "---";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(380, 112);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(84, 20);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Sipariş No:";
-            // 
-            // lblBatchNo
-            // 
-            this.lblBatchNo.AutoSize = true;
-            this.lblBatchNo.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblBatchNo.Location = new System.Drawing.Point(500, 80);
-            this.lblBatchNo.Name = "lblBatchNo";
-            this.lblBatchNo.Size = new System.Drawing.Size(27, 23);
-            this.lblBatchNo.TabIndex = 9;
-            this.lblBatchNo.Text = "---";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(380, 82);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(76, 20);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Batch No:";
-            // 
-            // lblMusteriNo
-            // 
-            this.lblMusteriNo.AutoSize = true;
-            this.lblMusteriNo.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblMusteriNo.Location = new System.Drawing.Point(500, 50);
-            this.lblMusteriNo.Name = "lblMusteriNo";
-            this.lblMusteriNo.Size = new System.Drawing.Size(27, 23);
-            this.lblMusteriNo.TabIndex = 7;
-            this.lblMusteriNo.Text = "---";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(380, 52);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 20);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Müşteri No:";
-            // 
-            // lblOperator
-            // 
-            this.lblOperator.AutoSize = true;
-            this.lblOperator.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblOperator.Location = new System.Drawing.Point(130, 80);
-            this.lblOperator.Name = "lblOperator";
-            this.lblOperator.Size = new System.Drawing.Size(27, 23);
-            this.lblOperator.TabIndex = 5;
-            this.lblOperator.Text = "---";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(15, 82);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 20);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Operatör:";
-            // 
-            // lblReceteAdi
-            // 
-            this.lblReceteAdi.AutoSize = true;
-            this.lblReceteAdi.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblReceteAdi.Location = new System.Drawing.Point(130, 50);
-            this.lblReceteAdi.Name = "lblReceteAdi";
-            this.lblReceteAdi.Size = new System.Drawing.Size(27, 23);
-            this.lblReceteAdi.TabIndex = 3;
-            this.lblReceteAdi.Text = "---";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.Location = new System.Drawing.Point(15, 52);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Reçete Adı:";
+            btnGeri.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnGeri.Location = new Point(9, 8);
+            btnGeri.Margin = new Padding(3, 2, 3, 2);
+            btnGeri.Name = "btnGeri";
+            btnGeri.Size = new Size(82, 22);
+            btnGeri.TabIndex = 0;
+            btnGeri.Text = "< GERİ";
+            btnGeri.UseVisualStyleBackColor = true;
             // 
             // lblMakineAdi
             // 
-            this.lblMakineAdi.AutoSize = true;
-            this.lblMakineAdi.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblMakineAdi.Location = new System.Drawing.Point(130, 10);
-            this.lblMakineAdi.Name = "lblMakineAdi";
-            this.lblMakineAdi.Size = new System.Drawing.Size(35, 28);
-            this.lblMakineAdi.TabIndex = 1;
-            this.lblMakineAdi.Text = "---";
+            lblMakineAdi.Dock = DockStyle.Fill;
+            lblMakineAdi.Font = new Font("Segoe UI", 16.2F, FontStyle.Bold);
+            lblMakineAdi.ForeColor = Color.FromArgb(45, 52, 54);
+            lblMakineAdi.Location = new Point(0, 0);
+            lblMakineAdi.Name = "lblMakineAdi";
+            lblMakineAdi.Size = new Size(1358, 38);
+            lblMakineAdi.TabIndex = 1;
+            lblMakineAdi.Text = "MAKİNE ADI";
+            lblMakineAdi.TextAlign = ContentAlignment.MiddleCenter;
+            lblMakineAdi.Click += lblMakineAdi_Click;
             // 
-            // label1
+            // pnlMainContent
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(15, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 28);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Makine Adı:";
+            pnlMainContent.Controls.Add(tableLayoutPanelMain);
+            pnlMainContent.Dock = DockStyle.Fill;
+            pnlMainContent.Location = new Point(0, 38);
+            pnlMainContent.Margin = new Padding(3, 2, 3, 2);
+            pnlMainContent.Name = "pnlMainContent";
+            pnlMainContent.Size = new Size(1358, 487);
+            pnlMainContent.TabIndex = 2;
+            // 
+            // tableLayoutPanelMain
+            // 
+            tableLayoutPanelMain.ColumnCount = 1;
+            tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelMain.Controls.Add(pnlTopDashboard, 0, 0);
+            tableLayoutPanelMain.Controls.Add(pnlTimeline, 0, 1);
+            tableLayoutPanelMain.Dock = DockStyle.Fill;
+            tableLayoutPanelMain.Location = new Point(0, 0);
+            tableLayoutPanelMain.Margin = new Padding(3, 2, 3, 2);
+            tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+            tableLayoutPanelMain.RowCount = 2;
+            tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 240F));
+            tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelMain.Size = new Size(1358, 487);
+            tableLayoutPanelMain.TabIndex = 0;
+            // 
+            // pnlTopDashboard
+            // 
+            pnlTopDashboard.Controls.Add(tableLayoutPanelTop);
+            pnlTopDashboard.Dock = DockStyle.Fill;
+            pnlTopDashboard.Location = new Point(3, 2);
+            pnlTopDashboard.Margin = new Padding(3, 2, 3, 2);
+            pnlTopDashboard.Name = "pnlTopDashboard";
+            pnlTopDashboard.Size = new Size(1352, 236);
+            pnlTopDashboard.TabIndex = 0;
+            // 
+            // tableLayoutPanelTop
+            // 
+            tableLayoutPanelTop.ColumnCount = 1;
+            tableLayoutPanelTop.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 93.04734F));
+            tableLayoutPanelTop.Controls.Add(pnlGaugesAndInfo, 0, 0);
+            tableLayoutPanelTop.Dock = DockStyle.Fill;
+            tableLayoutPanelTop.Location = new Point(0, 0);
+            tableLayoutPanelTop.Margin = new Padding(3, 2, 3, 2);
+            tableLayoutPanelTop.Name = "tableLayoutPanelTop";
+            tableLayoutPanelTop.RowCount = 1;
+            tableLayoutPanelTop.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelTop.Size = new Size(1352, 236);
+            tableLayoutPanelTop.TabIndex = 0;
+            // 
+            // pnlGaugesAndInfo
+            // 
+            pnlGaugesAndInfo.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            pnlGaugesAndInfo.BackColor = Color.WhiteSmoke;
+            pnlGaugesAndInfo.Controls.Add(pnlAlarmsAndSteps);
+            pnlGaugesAndInfo.Controls.Add(pnlGauges);
+            pnlGaugesAndInfo.Controls.Add(pnlInfo);
+            pnlGaugesAndInfo.Location = new Point(3, 2);
+            pnlGaugesAndInfo.Margin = new Padding(3, 2, 3, 2);
+            pnlGaugesAndInfo.Name = "pnlGaugesAndInfo";
+            pnlGaugesAndInfo.Size = new Size(1346, 232);
+            pnlGaugesAndInfo.TabIndex = 2;
+            // 
+            // pnlAlarmsAndSteps
+            // 
+            pnlAlarmsAndSteps.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            pnlAlarmsAndSteps.BackColor = Color.WhiteSmoke;
+            pnlAlarmsAndSteps.Controls.Add(dgvAdimlar);
+            pnlAlarmsAndSteps.Controls.Add(label10);
+            pnlAlarmsAndSteps.Controls.Add(lblCalisanAdim);
+            pnlAlarmsAndSteps.Controls.Add(label8);
+            pnlAlarmsAndSteps.Controls.Add(lstAlarmlar);
+            pnlAlarmsAndSteps.Controls.Add(label7);
+            pnlAlarmsAndSteps.Location = new Point(984, 0);
+            pnlAlarmsAndSteps.Margin = new Padding(3, 2, 3, 2);
+            pnlAlarmsAndSteps.Name = "pnlAlarmsAndSteps";
+            pnlAlarmsAndSteps.Size = new Size(360, 232);
+            pnlAlarmsAndSteps.TabIndex = 5;
+            pnlAlarmsAndSteps.TabStop = true;
+            // 
+            // dgvAdimlar
+            // 
+            dgvAdimlar.AllowUserToAddRows = false;
+            dgvAdimlar.AllowUserToDeleteRows = false;
+            dgvAdimlar.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvAdimlar.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvAdimlar.Location = new Point(35, 146);
+            dgvAdimlar.Margin = new Padding(3, 2, 3, 2);
+            dgvAdimlar.Name = "dgvAdimlar";
+            dgvAdimlar.ReadOnly = true;
+            dgvAdimlar.RowHeadersVisible = false;
+            dgvAdimlar.RowHeadersWidth = 51;
+            dgvAdimlar.RowTemplate.Height = 24;
+            dgvAdimlar.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvAdimlar.Size = new Size(291, 80);
+            dgvAdimlar.TabIndex = 5;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
+            label10.Location = new Point(35, 126);
+            label10.Name = "label10";
+            label10.Size = new Size(116, 19);
+            label10.TabIndex = 4;
+            label10.Text = "Reçete Adımları";
+            // 
+            // lblCalisanAdim
+            // 
+            lblCalisanAdim.BackColor = Color.White;
+            lblCalisanAdim.BorderStyle = BorderStyle.FixedSingle;
+            lblCalisanAdim.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblCalisanAdim.ForeColor = Color.ForestGreen;
+            lblCalisanAdim.Location = new Point(35, 96);
+            lblCalisanAdim.Name = "lblCalisanAdim";
+            lblCalisanAdim.Size = new Size(291, 24);
+            lblCalisanAdim.TabIndex = 3;
+            lblCalisanAdim.Text = "---";
+            lblCalisanAdim.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
+            label8.Location = new Point(35, 79);
+            label8.Name = "label8";
+            label8.Size = new Size(96, 19);
+            label8.TabIndex = 2;
+            label8.Text = "Çalışan Adım";
+            // 
+            // lstAlarmlar
+            // 
+            lstAlarmlar.BackColor = Color.FromArgb(45, 52, 54);
+            lstAlarmlar.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
+            lstAlarmlar.ForeColor = Color.White;
+            lstAlarmlar.FormattingEnabled = true;
+            lstAlarmlar.ItemHeight = 15;
+            lstAlarmlar.Location = new Point(35, 27);
+            lstAlarmlar.Margin = new Padding(3, 2, 3, 2);
+            lstAlarmlar.Name = "lstAlarmlar";
+            lstAlarmlar.Size = new Size(291, 49);
+            lstAlarmlar.TabIndex = 1;
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
+            label7.Location = new Point(35, 7);
+            label7.Name = "label7";
+            label7.Size = new Size(123, 19);
+            label7.TabIndex = 0;
+            label7.Text = "Parti İçi Alarmlar";
             // 
             // pnlGauges
             // 
-            this.pnlGauges.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlGauges.Controls.Add(this.lblWaterValue);
-            this.pnlGauges.Controls.Add(this.lblWaterTitle);
-            this.pnlGauges.Controls.Add(this.lblTempValue);
-            this.pnlGauges.Controls.Add(this.lblTempTitle);
-            this.pnlGauges.Controls.Add(this.lblRpmValue);
-            this.pnlGauges.Controls.Add(this.lblRpmTitle);
-            this.pnlGauges.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlGauges.Location = new System.Drawing.Point(0, 200);
-            this.pnlGauges.Name = "pnlGauges";
-            this.pnlGauges.Size = new System.Drawing.Size(300, 400);
-            this.pnlGauges.TabIndex = 2;
+            pnlGauges.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            pnlGauges.Controls.Add(waterTankGauge1);
+            pnlGauges.Controls.Add(panelTemp);
+            pnlGauges.Controls.Add(gaugeRpm);
+            pnlGauges.Location = new Point(401, -1);
+            pnlGauges.Margin = new Padding(3, 2, 3, 2);
+            pnlGauges.Name = "pnlGauges";
+            pnlGauges.Size = new Size(556, 232);
+            pnlGauges.TabIndex = 1;
             // 
-            // lblWaterValue
+            // waterTankGauge1
             // 
-            this.lblWaterValue.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblWaterValue.Location = new System.Drawing.Point(15, 290);
-            this.lblWaterValue.Name = "lblWaterValue";
-            this.lblWaterValue.Size = new System.Drawing.Size(265, 31);
-            this.lblWaterValue.TabIndex = 5;
-            this.lblWaterValue.Text = "0";
-            this.lblWaterValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            waterTankGauge1.Location = new Point(362, 18);
+            waterTankGauge1.Margin = new Padding(3, 2, 3, 2);
+            waterTankGauge1.Maximum = 5000;
+            waterTankGauge1.Name = "waterTankGauge1";
+            waterTankGauge1.Size = new Size(170, 197);
+            waterTankGauge1.TabIndex = 4;
+            waterTankGauge1.Value = 0;
             // 
-            // lblWaterTitle
+            // panelTemp
             // 
-            this.lblWaterTitle.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblWaterTitle.Location = new System.Drawing.Point(15, 260);
-            this.lblWaterTitle.Name = "lblWaterTitle";
-            this.lblWaterTitle.Size = new System.Drawing.Size(265, 23);
-            this.lblWaterTitle.TabIndex = 4;
-            this.lblWaterTitle.Text = "SU SEVİYESİ (LT)";
-            this.lblWaterTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            panelTemp.Controls.Add(lblTempValue);
+            panelTemp.Controls.Add(lblTempTitle);
+            panelTemp.Controls.Add(progressTemp);
+            panelTemp.Location = new Point(220, 28);
+            panelTemp.Margin = new Padding(3, 2, 3, 2);
+            panelTemp.Name = "panelTemp";
+            panelTemp.Size = new Size(105, 176);
+            panelTemp.TabIndex = 3;
             // 
             // lblTempValue
             // 
-            this.lblTempValue.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTempValue.Location = new System.Drawing.Point(15, 180);
-            this.lblTempValue.Name = "lblTempValue";
-            this.lblTempValue.Size = new System.Drawing.Size(265, 31);
-            this.lblTempValue.TabIndex = 3;
-            this.lblTempValue.Text = "0";
-            this.lblTempValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblTempValue.Dock = DockStyle.Bottom;
+            lblTempValue.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTempValue.Location = new Point(0, 132);
+            lblTempValue.Name = "lblTempValue";
+            lblTempValue.Size = new Size(105, 22);
+            lblTempValue.TabIndex = 2;
+            lblTempValue.Text = "0 °C";
+            lblTempValue.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblTempTitle
             // 
-            this.lblTempTitle.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblTempTitle.Location = new System.Drawing.Point(15, 150);
-            this.lblTempTitle.Name = "lblTempTitle";
-            this.lblTempTitle.Size = new System.Drawing.Size(265, 23);
-            this.lblTempTitle.TabIndex = 2;
-            this.lblTempTitle.Text = "SICAKLIK (°C)";
-            this.lblTempTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblTempTitle.Dock = DockStyle.Bottom;
+            lblTempTitle.Font = new Font("Segoe UI", 10F);
+            lblTempTitle.ForeColor = Color.FromArgb(100, 100, 100);
+            lblTempTitle.Location = new Point(0, 154);
+            lblTempTitle.Name = "lblTempTitle";
+            lblTempTitle.Size = new Size(105, 22);
+            lblTempTitle.TabIndex = 1;
+            lblTempTitle.Text = "Sıcaklık";
+            lblTempTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // lblRpmValue
+            // progressTemp
             // 
-            this.lblRpmValue.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblRpmValue.Location = new System.Drawing.Point(15, 70);
-            this.lblRpmValue.Name = "lblRpmValue";
-            this.lblRpmValue.Size = new System.Drawing.Size(265, 31);
-            this.lblRpmValue.TabIndex = 1;
-            this.lblRpmValue.Text = "0";
-            this.lblRpmValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            progressTemp.Location = new Point(39, 17);
+            progressTemp.Margin = new Padding(3, 2, 3, 2);
+            progressTemp.Maximum = 150;
+            progressTemp.Name = "progressTemp";
+            progressTemp.Size = new Size(26, 113);
+            progressTemp.Step = 1;
+            progressTemp.Style = ProgressBarStyle.Continuous;
+            progressTemp.TabIndex = 0;
             // 
-            // lblRpmTitle
+            // gaugeRpm
             // 
-            this.lblRpmTitle.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblRpmTitle.Location = new System.Drawing.Point(15, 40);
-            this.lblRpmTitle.Name = "lblRpmTitle";
-            this.lblRpmTitle.Size = new System.Drawing.Size(265, 23);
-            this.lblRpmTitle.TabIndex = 0;
-            this.lblRpmTitle.Text = "DEVİR (RPM)";
-            this.lblRpmTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            gaugeRpm.AnimationFunction = WinFormAnimation.KnownAnimationFunctions.Liner;
+            gaugeRpm.AnimationSpeed = 500;
+            gaugeRpm.BackColor = Color.Transparent;
+            gaugeRpm.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            gaugeRpm.ForeColor = Color.FromArgb(64, 64, 64);
+            gaugeRpm.InnerColor = Color.White;
+            gaugeRpm.InnerMargin = 2;
+            gaugeRpm.InnerWidth = -1;
+            gaugeRpm.Location = new Point(24, 42);
+            gaugeRpm.Margin = new Padding(3, 2, 3, 2);
+            gaugeRpm.MarqueeAnimationSpeed = 2000;
+            gaugeRpm.Maximum = 500;
+            gaugeRpm.Name = "gaugeRpm";
+            gaugeRpm.OuterColor = Color.FromArgb(224, 224, 224);
+            gaugeRpm.OuterMargin = -25;
+            gaugeRpm.OuterWidth = 26;
+            gaugeRpm.ProgressColor = Color.FromArgb(46, 204, 113);
+            gaugeRpm.ProgressWidth = 18;
+            gaugeRpm.SecondaryFont = new Font("Segoe UI", 10F);
+            gaugeRpm.Size = new Size(159, 148);
+            gaugeRpm.StartAngle = 135;
+            gaugeRpm.SubscriptColor = Color.FromArgb(100, 100, 100);
+            gaugeRpm.SubscriptMargin = new Padding(-6, 0, 0, 0);
+            gaugeRpm.SubscriptText = "RPM";
+            gaugeRpm.SuperscriptColor = Color.FromArgb(166, 166, 166);
+            gaugeRpm.SuperscriptMargin = new Padding(0, -35, 50, 0);
+            gaugeRpm.SuperscriptText = "";
+            gaugeRpm.TabIndex = 0;
+            gaugeRpm.Text = "0";
+            gaugeRpm.TextMargin = new Padding(7, 20, 0, 0);
+            gaugeRpm.Value = 68;
+            // 
+            // pnlInfo
+            // 
+            pnlInfo.Anchor = AnchorStyles.Top | AnchorStyles.Bottom;
+            pnlInfo.Controls.Add(lblSiparisNo);
+            pnlInfo.Controls.Add(label6);
+            pnlInfo.Controls.Add(lblBatchNo);
+            pnlInfo.Controls.Add(label5);
+            pnlInfo.Controls.Add(lblMusteriNo);
+            pnlInfo.Controls.Add(label4);
+            pnlInfo.Controls.Add(lblOperator);
+            pnlInfo.Controls.Add(label3);
+            pnlInfo.Controls.Add(lblReceteAdi);
+            pnlInfo.Controls.Add(label2);
+            pnlInfo.Controls.Add(label1);
+            pnlInfo.Location = new Point(0, 0);
+            pnlInfo.Margin = new Padding(3, 2, 3, 2);
+            pnlInfo.Name = "pnlInfo";
+            pnlInfo.Size = new Size(360, 232);
+            pnlInfo.TabIndex = 0;
+            // 
+            // lblSiparisNo
+            // 
+            lblSiparisNo.BackColor = Color.White;
+            lblSiparisNo.BorderStyle = BorderStyle.FixedSingle;
+            lblSiparisNo.Font = new Font("Segoe UI", 9F);
+            lblSiparisNo.Location = new Point(128, 134);
+            lblSiparisNo.Name = "lblSiparisNo";
+            lblSiparisNo.Size = new Size(175, 19);
+            lblSiparisNo.TabIndex = 21;
+            lblSiparisNo.Text = "---";
+            lblSiparisNo.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label6.Location = new Point(10, 135);
+            label6.Name = "label6";
+            label6.Size = new Size(65, 15);
+            label6.TabIndex = 20;
+            label6.Text = "Sipariş No:";
+            // 
+            // lblBatchNo
+            // 
+            lblBatchNo.BackColor = Color.White;
+            lblBatchNo.BorderStyle = BorderStyle.FixedSingle;
+            lblBatchNo.Font = new Font("Segoe UI", 9F);
+            lblBatchNo.Location = new Point(128, 110);
+            lblBatchNo.Name = "lblBatchNo";
+            lblBatchNo.Size = new Size(175, 19);
+            lblBatchNo.TabIndex = 19;
+            lblBatchNo.Text = "---";
+            lblBatchNo.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label5.Location = new Point(10, 112);
+            label5.Name = "label5";
+            label5.Size = new Size(61, 15);
+            label5.TabIndex = 18;
+            label5.Text = "Batch No:";
+            // 
+            // lblMusteriNo
+            // 
+            lblMusteriNo.BackColor = Color.White;
+            lblMusteriNo.BorderStyle = BorderStyle.FixedSingle;
+            lblMusteriNo.Font = new Font("Segoe UI", 9F);
+            lblMusteriNo.Location = new Point(128, 87);
+            lblMusteriNo.Name = "lblMusteriNo";
+            lblMusteriNo.Size = new Size(175, 19);
+            lblMusteriNo.TabIndex = 17;
+            lblMusteriNo.Text = "---";
+            lblMusteriNo.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label4.Location = new Point(10, 88);
+            label4.Name = "label4";
+            label4.Size = new Size(72, 15);
+            label4.TabIndex = 16;
+            label4.Text = "Müşteri No:";
+            // 
+            // lblOperator
+            // 
+            lblOperator.BackColor = Color.White;
+            lblOperator.BorderStyle = BorderStyle.FixedSingle;
+            lblOperator.Font = new Font("Segoe UI", 9F);
+            lblOperator.Location = new Point(128, 64);
+            lblOperator.Name = "lblOperator";
+            lblOperator.Size = new Size(175, 19);
+            lblOperator.TabIndex = 15;
+            lblOperator.Text = "---";
+            lblOperator.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label3.Location = new Point(10, 65);
+            label3.Name = "label3";
+            label3.Size = new Size(61, 15);
+            label3.TabIndex = 14;
+            label3.Text = "Operatör:";
+            // 
+            // lblReceteAdi
+            // 
+            lblReceteAdi.BackColor = Color.White;
+            lblReceteAdi.BorderStyle = BorderStyle.FixedSingle;
+            lblReceteAdi.Font = new Font("Segoe UI", 9F);
+            lblReceteAdi.Location = new Point(128, 40);
+            lblReceteAdi.Name = "lblReceteAdi";
+            lblReceteAdi.Size = new Size(175, 19);
+            lblReceteAdi.TabIndex = 13;
+            lblReceteAdi.Text = "---";
+            lblReceteAdi.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label2.Location = new Point(10, 42);
+            label2.Name = "label2";
+            label2.Size = new Size(71, 15);
+            label2.TabIndex = 12;
+            label2.Text = "Reçete Adı:";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            label1.Location = new Point(7, 5);
+            label1.Name = "label1";
+            label1.Size = new Size(106, 21);
+            label1.TabIndex = 0;
+            label1.Text = "Makina Bilgi";
             // 
             // pnlTimeline
             // 
-            this.pnlTimeline.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlTimeline.Controls.Add(this.formsPlot1);
-            this.pnlTimeline.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlTimeline.Location = new System.Drawing.Point(300, 200);
-            this.pnlTimeline.Name = "pnlTimeline";
-            this.pnlTimeline.Size = new System.Drawing.Size(700, 400);
-            this.pnlTimeline.TabIndex = 3;
+            pnlTimeline.Controls.Add(formsPlot1);
+            pnlTimeline.Dock = DockStyle.Fill;
+            pnlTimeline.Location = new Point(3, 242);
+            pnlTimeline.Margin = new Padding(3, 2, 3, 2);
+            pnlTimeline.Name = "pnlTimeline";
+            pnlTimeline.Size = new Size(1352, 243);
+            pnlTimeline.TabIndex = 1;
             // 
             // formsPlot1
             // 
-            this.formsPlot1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.formsPlot1.Location = new System.Drawing.Point(0, 0);
-            this.formsPlot1.Name = "formsPlot1";
-            this.formsPlot1.Size = new System.Drawing.Size(698, 398);
-            this.formsPlot1.TabIndex = 0;
+            formsPlot1.DisplayScale = 1F;
+            formsPlot1.Dock = DockStyle.Fill;
+            formsPlot1.Location = new Point(0, 0);
+            formsPlot1.Margin = new Padding(3, 2, 3, 2);
+            formsPlot1.Name = "formsPlot1";
+            formsPlot1.Size = new Size(1352, 243);
+            formsPlot1.TabIndex = 0;
             // 
             // MakineDetay_Control
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.pnlTimeline);
-            this.Controls.Add(this.pnlGauges);
-            this.Controls.Add(this.pnlInfo);
-            this.Controls.Add(this.pnlTop);
-            this.Name = "MakineDetay_Control";
-            this.Size = new System.Drawing.Size(1000, 600);
-            this.pnlTop.ResumeLayout(false);
-            this.pnlInfo.ResumeLayout(false);
-            this.pnlInfo.PerformLayout();
-            this.pnlGauges.ResumeLayout(false);
-            this.pnlGauges.PerformLayout();
-            this.pnlTimeline.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            Controls.Add(pnlMainContent);
+            Controls.Add(pnlTop);
+            Margin = new Padding(3, 2, 3, 2);
+            Name = "MakineDetay_Control";
+            Size = new Size(1358, 525);
+            pnlTop.ResumeLayout(false);
+            pnlMainContent.ResumeLayout(false);
+            tableLayoutPanelMain.ResumeLayout(false);
+            pnlTopDashboard.ResumeLayout(false);
+            tableLayoutPanelTop.ResumeLayout(false);
+            pnlGaugesAndInfo.ResumeLayout(false);
+            pnlAlarmsAndSteps.ResumeLayout(false);
+            pnlAlarmsAndSteps.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvAdimlar).EndInit();
+            pnlGauges.ResumeLayout(false);
+            panelTemp.ResumeLayout(false);
+            pnlInfo.ResumeLayout(false);
+            pnlInfo.PerformLayout();
+            pnlTimeline.ResumeLayout(false);
+            ResumeLayout(false);
         }
+
         #endregion
+
         private System.Windows.Forms.Panel pnlTop;
         private System.Windows.Forms.Button btnGeri;
+        private System.Windows.Forms.Label lblMakineAdi;
+        private System.Windows.Forms.Panel pnlMainContent;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
+        private System.Windows.Forms.Panel pnlTopDashboard;
+        private System.Windows.Forms.Panel pnlTimeline;
+        private ScottPlot.WinForms.FormsPlot formsPlot1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelTop;
+        private System.Windows.Forms.Panel pnlGaugesAndInfo;
         private System.Windows.Forms.Panel pnlInfo;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel pnlGauges;
         private System.Windows.Forms.Label lblSiparisNo;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblBatchNo;
@@ -327,16 +568,20 @@ namespace TekstilScada.UI.Views
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblReceteAdi;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblMakineAdi;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel pnlGauges;
-        private System.Windows.Forms.Panel pnlTimeline;
-        private ScottPlot.WinForms.FormsPlot formsPlot1;
-        private System.Windows.Forms.Label lblRpmTitle;
-        private System.Windows.Forms.Label lblRpmValue;
-        private System.Windows.Forms.Label lblTempTitle;
+        private CircularProgressBar.CircularProgressBar gaugeRpm;
+        private System.Windows.Forms.Panel panelTemp;
+        private System.Windows.Forms.ProgressBar progressTemp;
         private System.Windows.Forms.Label lblTempValue;
-        private System.Windows.Forms.Label lblWaterTitle;
-        private System.Windows.Forms.Label lblWaterValue;
+        private System.Windows.Forms.Label lblTempTitle;
+        private UI.Controls.WaterTankGauge waterTankGauge1;
+        private Panel pnlAlarmsAndSteps;
+        private DataGridView dgvAdimlar;
+        private Label label10;
+        private Label lblCalisanAdim;
+        private Label label8;
+        private ListBox lstAlarmlar;
+        private Label label7;
     }
 }
+
+

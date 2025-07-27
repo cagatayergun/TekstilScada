@@ -42,6 +42,7 @@ namespace TekstilScada
                 if (loginForm.ShowDialog() == DialogResult.OK)
                 {
                     Application.Run(new MainForm());
+                    
                 }
             }
         }
