@@ -17,20 +17,22 @@ namespace TekstilScada.Repositories
             using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
-                // Sadece tamamlanmış batch'leri alıyoruz
+                // Sadece tamamlanmış ve OEE için gerekli verileri olan batch'leri alıyoruz
                 string query = @"
-                    SELECT 
-                        m.MachineName,
-                        b.BatchId,
-                        b.TotalProductionCount,
-                        b.DefectiveProductionCount,
-                        b.TotalDownTimeSeconds,
-                        b.StandardCycleTimeMinutes,
-                        TIME_TO_SEC(TIMEDIFF(b.EndTime, b.StartTime)) as PlannedTimeInSeconds
-                    FROM production_batches AS b
-                    JOIN machines AS m ON b.MachineId = m.Id
-                    WHERE 
-                        b.StartTime BETWEEN @StartTime AND @EndTime AND b.EndTime IS NOT NULL " +
+            SELECT 
+                m.MachineName,
+                b.BatchId,
+                b.TotalProductionCount,
+                b.DefectiveProductionCount,
+                b.TotalDownTimeSeconds,
+                b.StandardCycleTimeMinutes,
+                TIME_TO_SEC(TIMEDIFF(b.EndTime, b.StartTime)) as PlannedTimeInSeconds
+            FROM production_batches AS b
+            JOIN machines AS m ON b.MachineId = m.Id
+            WHERE 
+                b.StartTime BETWEEN @StartTime AND @EndTime 
+                AND b.EndTime IS NOT NULL 
+                AND b.TotalProductionCount > 0 " + // Hesaplama için üretim olmalı
                     (machineId.HasValue ? "AND b.MachineId = @MachineId " : "") +
                     "ORDER BY m.MachineName;";
 
@@ -46,21 +48,21 @@ namespace TekstilScada.Repositories
                 {
                     while (reader.Read())
                     {
-                        double plannedTime = reader.GetDouble("PlannedTimeInSeconds");
-                        double downTime = reader.GetDouble("TotalDownTimeSeconds");
+                        double plannedTime = reader.IsDBNull(reader.GetOrdinal("PlannedTimeInSeconds")) ? 0 : reader.GetDouble("PlannedTimeInSeconds");
+                        double downTime = reader.IsDBNull(reader.GetOrdinal("TotalDownTimeSeconds")) ? 0 : reader.GetDouble("TotalDownTimeSeconds");
                         double runTime = plannedTime - downTime;
 
-                        int totalCount = reader.GetInt32("TotalProductionCount");
-                        int defectiveCount = reader.GetInt32("DefectiveProductionCount");
+                        int totalCount = reader.IsDBNull(reader.GetOrdinal("TotalProductionCount")) ? 0 : reader.GetInt32("TotalProductionCount");
+                        int defectiveCount = reader.IsDBNull(reader.GetOrdinal("DefectiveProductionCount")) ? 0 : reader.GetInt32("DefectiveProductionCount");
                         int goodCount = totalCount - defectiveCount;
 
-                        double standardCycleTime = reader.GetDouble("StandardCycleTimeMinutes") * 60; // saniyeye çevir
+                        double standardCycleTime = reader.IsDBNull(reader.GetOrdinal("StandardCycleTimeMinutes")) ? 0 : (reader.GetDouble("StandardCycleTimeMinutes") * 60); // saniyeye çevir
 
                         // 1. Availability (Kullanılabilirlik)
                         double availability = (plannedTime > 0) ? (runTime / plannedTime) * 100 : 0;
 
                         // 2. Performance (Performans)
-                        double performance = (runTime > 0 && totalCount > 0) ? (standardCycleTime * totalCount) / runTime * 100 : 0;
+                        double performance = (runTime > 0 && totalCount > 0 && standardCycleTime > 0) ? (standardCycleTime * totalCount) / runTime * 100 : 0;
 
                         // 3. Quality (Kalite)
                         double quality = (totalCount > 0) ? ((double)goodCount / totalCount) * 100 : 0;
@@ -72,10 +74,10 @@ namespace TekstilScada.Repositories
                         {
                             MachineName = reader.GetString("MachineName"),
                             BatchId = reader.GetString("BatchId"),
-                            Availability = Math.Max(0, availability), // Negatif sonuçları engelle
-                            Performance = Math.Max(0, performance),
-                            Quality = Math.Max(0, quality),
-                            OEE = Math.Max(0, oee)
+                            Availability = Math.Max(0, Math.Round(availability, 2)), // Negatif ve ondalıklı sonuçları engelle
+                            Performance = Math.Max(0, Math.Round(performance, 2)),
+                            Quality = Math.Max(0, Math.Round(quality, 2)),
+                            OEE = Math.Max(0, Math.Round(oee, 2))
                         });
                     }
                 }

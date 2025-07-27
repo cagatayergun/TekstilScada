@@ -1,8 +1,20 @@
-﻿namespace TekstilScada.Core
+﻿using Microsoft.Extensions.Configuration;
+using System.IO;
+
+namespace TekstilScada.Core
 {
     public static class AppConfig
     {
-        // Bu bilgileri gelecekte bir App.config veya appsettings.json dosyasından okuyabilirsiniz.
-        public static string ConnectionString { get; } = "server=localhost;port=3306;database=scada_db;user=user1;password=Cagatay.19;";
+        public static string ConnectionString { get; private set; }
+
+        static AppConfig()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            ConnectionString = configuration.GetConnectionString("DefaultConnection");
+        }
     }
 }
