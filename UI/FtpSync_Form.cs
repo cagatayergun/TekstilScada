@@ -72,19 +72,19 @@ namespace TekstilScada.UI
                 lstHmiRecipes.DataSource = null;
                 return;
             }
-
-            _ftpService = new FtpService(selectedMachine.IpAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
+            _ftpService = new FtpService(selectedMachine.VncAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
+          //  _ftpService = new FtpService(selectedMachine.IpAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
 
             SetBusyState(true, "HMI reçeteleri listeleniyor...");
             lstHmiRecipes.DataSource = null;
 
-            try
+            try///flash/recipe
             {
-                var files = await _ftpService.ListDirectoryAsync("/flash/recipe/");
+                var files = await _ftpService.ListDirectoryAsync("/");
                 var recipeFiles = files
-                    .Where(f => f.StartsWith("RECIPE_", StringComparison.OrdinalIgnoreCase) && f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-                    .OrderBy(f => f)
-                    .ToList();
+    .Where(f => f.StartsWith("XPR", StringComparison.OrdinalIgnoreCase) && f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+    .OrderBy(f => f)
+    .ToList();
                 lstHmiRecipes.DataSource = recipeFiles;
             }
             catch (Exception ex)
@@ -142,7 +142,7 @@ namespace TekstilScada.UI
                     // Tam reçete verisini veritabanından çek
                     var fullRecipe = _recipeRepository.GetRecipeById(selectedRecipeInfo.Id);
                     string csvContent = RecipeCsvConverter.ToCsv(fullRecipe);
-                    string remoteFileName = $"/flash/recipe/RECIPE_{currentSlot}.csv";
+                    string remoteFileName = $"/RECIPE_{currentSlot}.csv";
 
                     await _ftpService.UploadFileAsync(remoteFileName, csvContent);
 
@@ -189,7 +189,7 @@ namespace TekstilScada.UI
                 foreach (string selectedFile in lstHmiRecipes.SelectedItems)
                 {
                     lblStatus.Text = $"'{selectedFile}' alınıyor...";
-                    string remoteFilePath = $"/flash/recipe/{selectedFile}";
+                    string remoteFilePath = $"/{selectedFile}";
                     string csvContent = await _ftpService.DownloadFileAsync(remoteFilePath);
 
                     string newRecipeName = $"HMI_{Path.GetFileNameWithoutExtension(selectedFile)}_{DateTime.Now:yyMMddHHmm}";

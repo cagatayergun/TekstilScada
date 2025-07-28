@@ -284,6 +284,7 @@ namespace TekstilScada.UI.Views
         {
             var ftpForm = new FtpSync_Form(_machineRepository, _recipeRepository);
             ftpForm.ShowDialog(this);
+            LoadRecipeList();
         }
 
         private async void BtnSendToPlc_Click(object sender, EventArgs e)

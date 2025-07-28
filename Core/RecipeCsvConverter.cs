@@ -43,35 +43,48 @@ namespace TekstilScada.Core
             var recipe = new ScadaRecipe { RecipeName = recipeName };
             if (string.IsNullOrWhiteSpace(csvContent)) return recipe;
 
-            var lines = csvContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = csvContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                                  .ToList();
+
+            // Eğer dosya başlık içeriyorsa (XPR00001.csv formatı gibi), bu başlıkları atla
+            // Örnek: "Date", "Title", "Item Count" gibi başlıklar varsa atlanır.
+            int dataStartIndex = 0;
+            if (lines.Count > 3 && lines[0].StartsWith("Date") && lines[2].StartsWith("Item Count"))
+            {
+                dataStartIndex = 3;
+            }
+
+            // Sadece sayısal veri içeren satırları al
+            var numericLines = lines.Skip(dataStartIndex)
+                                    .Where(line => short.TryParse(line, out _))
+                                    .ToList();
 
             int stepNumber = 1;
-            foreach (var line in lines)
+            // Verileri 25'erli gruplara ayırarak adımları oluştur
+            for (int i = 0; i < numericLines.Count; i += 25)
             {
-                try
+                // Grubun 25 eleman içerdiğinden emin ol
+                var stepValues = numericLines.Skip(i).Take(25).ToList();
+                if (stepValues.Count == 25)
                 {
-                    var step = new ScadaRecipeStep { StepNumber = stepNumber++ };
-                    var values = line.Split(',');
-
-                    // Her satırda 25 değer olmalı
-                    if (values.Length == 25)
+                    try
                     {
-                        for (int i = 0; i < 25; i++)
+                        var step = new ScadaRecipeStep { StepNumber = stepNumber++ };
+                        for (int j = 0; j < 25; j++)
                         {
-                            step.StepDataWords[i] = Convert.ToInt16(values[i]);
+                            step.StepDataWords[j] = Convert.ToInt16(stepValues[j]);
                         }
                         recipe.Steps.Add(step);
                     }
-                    else
+                    catch
                     {
-                        // Hatalı formatta satırları logla veya yoksay
+                        // Hatalı satırları logla veya yoksay
                     }
                 }
-                catch
-                {
-                    // Hatalı satırları logla veya yoksay
-                }
             }
+
+            // Eğer yukarıdaki mantıkla veri bulunamazsa, orijinal virgülle ayrılmış formatı dene
+         
 
             return recipe;
         }
