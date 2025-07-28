@@ -40,7 +40,7 @@ namespace TekstilScada.UI.Views
             btnReadFromPlc.Click += BtnReadFromPlc_Click;
             lstRecipes.SelectedIndexChanged += LstRecipes_SelectedIndexChanged;
             cmbTargetMachine.SelectedIndexChanged += CmbTargetMachine_SelectedIndexChanged;
-           // btnFtpSync.Click += BtnFtpSync_Click;
+            btnFtpSync.Click += BtnFtpSync_Click;
         }
 
         public void InitializeControl(RecipeRepository recipeRepo, MachineRepository machineRepo, Dictionary<int, IPlcManager> plcManagers)
@@ -69,7 +69,7 @@ namespace TekstilScada.UI.Views
             // PLC'ye gönderme yetkisi kontrolü
             btnSendToPlc.Enabled = PermissionService.CanTransferToPlc;
             btnReadFromPlc.Enabled = PermissionService.CanTransferToPlc;
-           // btnFtpSync.Enabled = PermissionService.CanTransferToPlc;
+            btnFtpSync.Enabled = PermissionService.CanTransferToPlc;
 
             // Reçete Adı metin kutusunu sadece yetkisi olanlar düzenleyebilir
             txtRecipeName.ReadOnly = !PermissionService.CanEditRecipes;
@@ -280,7 +280,11 @@ namespace TekstilScada.UI.Views
             }
         }
 
-       
+        private void BtnFtpSync_Click(object sender, EventArgs e)
+        {
+            var ftpForm = new FtpSync_Form(_machineRepository, _recipeRepository);
+            ftpForm.ShowDialog(this);
+        }
 
         private async void BtnSendToPlc_Click(object sender, EventArgs e)
         {

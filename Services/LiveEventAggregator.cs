@@ -1,9 +1,33 @@
 ﻿// Services/LiveEventAggregator.cs
 using System;
-using TekstilScada.Models; // YENİ EKLENTİ: Modelleri kullanmak için bu satır eklendi.
+using System.Collections.Generic;
+using TekstilScada.Models;
 
 namespace TekstilScada.Services
 {
+    // Olay verisini taşımak için basit bir sınıf
+    public class LiveEvent
+    {
+        public DateTime Timestamp { get; set; }
+        public string Source { get; set; } // Kaynak (Makine Adı, Sistem vb.)
+        public string Message { get; set; }
+        public EventType Type { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Timestamp:HH:mm:ss} | {Source} | {Message}";
+        }
+    }
+
+    public enum EventType
+    {
+        Alarm,
+        Process,
+        SystemInfo,
+        SystemWarning,
+        SystemSuccess
+    }
+
     // Olayları toplayan ve yayınlayan merkezi servis
     public class LiveEventAggregator
     {

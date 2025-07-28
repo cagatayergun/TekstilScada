@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using TekstilScada.Services;
-using TekstilScada.Models;
+
 namespace TekstilScada.UI
 {
     public partial class LiveEventPopup_Form : Form
