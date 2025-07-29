@@ -1,4 +1,5 @@
 ﻿// Services/PlcPollingService.cs
+//using Microsoft.AspNetCore.SignalR; // SignalR için eklendi
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,11 +8,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
+// WebAPI projesindeki Hub'a erişebilmek için bir using ifadesi ekliyoruz.
+// Bu, normalde katmanlar arası istenmeyen bir durumdur ancak bu mimaride
+// en pratik çözümdür.
+//using TekstilScada.WebAPI.Hubs;
 
 namespace TekstilScada.Services
 {
     public class PlcPollingService
-    {
+    {   
+        // === YENİ ALANLAR ===
+        // SignalR Hub'ına erişim sağlamak için bir HubContext ekliyoruz.
+        //private readonly IHubContext<ScadaHub> _hubContext;
         // DEĞİŞİKLİK: LsPlcManager -> IPlcManager
         private ConcurrentDictionary<int, IPlcManager> _plcManagers;
         public ConcurrentDictionary<int, FullMachineStatus> MachineDataCache { get; private set; }
@@ -40,6 +48,7 @@ namespace TekstilScada.Services
 
         public PlcPollingService()
         {
+           // _hubContext = hubContext;
             // DEĞİŞİKLİK: IPlcManager uyumlu hale getirildi
             _plcManagers = new ConcurrentDictionary<int, IPlcManager>();
             MachineDataCache = new ConcurrentDictionary<int, FullMachineStatus>();
@@ -134,6 +143,10 @@ namespace TekstilScada.Services
 
                         MachineDataCache[machineId] = status;
                         OnMachineDataRefreshed?.Invoke(machineId, status);
+                        // === YENİ KOD ===
+                        // Veri güncellendiğinde, bu veriyi SignalR üzerinden tüm istemcilere gönder.
+                 //       _hubContext.Clients.All.SendAsync("ReceiveMachineUpdate", status);
+                        // ================
                     }
                     else
                     {

@@ -24,12 +24,12 @@ namespace TekstilScada
             // Kullanýcýnýn son seçtiði dili ayar dosyasýndan oku.
             // --- YENÝ: KAYITLI DÝLÝ YÜKLEME ---
             // Kullanýcýnýn son seçtiði dili ayar dosyasýndan oku.
-            string savedLanguage = Settings.Default.UserLanguage;
-            if (!string.IsNullOrEmpty(savedLanguage))
-            {
-                // Eðer bir dil kayýtlýysa, LanguageManager aracýlýðýyla uygula.
-                LanguageManager.SetLanguage(savedLanguage);
-            }
+         //   string savedLanguage = Settings.Default.UserLanguage;
+          //  if (!string.IsNullOrEmpty(savedLanguage))
+          //  {
+          //      // Eðer bir dil kayýtlýysa, LanguageManager aracýlýðýyla uygula.
+          //      LanguageManager.SetLanguage(savedLanguage);
+            //}
             // --- YÜKLEME SONU ---
 
             // --- DÝL AYARLARI SONU ---
