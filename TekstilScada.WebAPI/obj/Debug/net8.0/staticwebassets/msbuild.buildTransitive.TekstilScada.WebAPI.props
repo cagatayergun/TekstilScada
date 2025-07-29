@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\TekstilScada.WebAPI.props" />
+</Project>

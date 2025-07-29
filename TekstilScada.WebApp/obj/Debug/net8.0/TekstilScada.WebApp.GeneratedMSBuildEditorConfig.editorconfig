@@ -1,0 +1,119 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = TekstilScada.WebApp
+build_property.RootNamespace = TekstilScada.WebApp
+build_property.ProjectDir = C:\Users\BestYazılım\source\repos\scada_çözüm\TekstilScada.WebApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\BestYazılım\source\repos\scada_çözüm\TekstilScada.WebApp
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/App.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Ayarlar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xBeWFybGFyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/BosaltmaEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCb3NhbHRtYUVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/CalismaEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDYWxpc21hRWRpdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/DozajEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEb3phakVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Error.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/FtpSyncModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xGdHBTeW5jTW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/IsitmaEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJc2l0bWFFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/KullaniciYonetimi.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xLdWxsYW5pY2lZb25ldGltaS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/KurutmaReceteEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xLdXJ1dG1hUmVjZXRlRWRpdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/MachineCard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWNoaW5lQ2FyZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/MachineEditModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWNoaW5lRWRpdE1vZGFsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/MakineYonetimi.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNYWtpbmVZb25ldGltaS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/ProsesKontrol.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9zZXNLb250cm9sLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Raporlar.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSYXBvcmxhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/SikmaEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTaWttYUVkaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/StepEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdGVwRWRpdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/SuAlmaEditor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xTdUFsbWFFZGl0b3IucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Pages/Weather.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-76gfvp54ky
+
+[C:/Users/BestYazılım/source/repos/scada_çözüm/TekstilScada.WebApp/Components/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-dh97x0o31a

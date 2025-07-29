@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TekstilScada.WebApp.bundle.scp.css",
+      "PackagePath": "staticwebassets\\TekstilScada.WebApp.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.TekstilScada.WebApp.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.TekstilScada.WebApp.props",
+      "PackagePath": "build\\TekstilScada.WebApp.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.TekstilScada.WebApp.props",
+      "PackagePath": "buildMultiTargeting\\TekstilScada.WebApp.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.TekstilScada.WebApp.props",
+      "PackagePath": "buildTransitive\\TekstilScada.WebApp.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

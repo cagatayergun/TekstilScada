@@ -1,0 +1,70 @@
+﻿@using TekstilScada.Models
+@using TekstilScada.WebApp.Services
+
+
+@inject ScadaDataService ScadaDataService
+
+<div class="modal fade show" style="display:block" role="dialog">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">FTP Senkronizasyon (@Machine.MachineName)</h5>
+                <button type="button" class="btn-close" @onclick="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @* ... (Sol ve orta kolonlar aynı kalacak) ... *@
+                    <div class="col-md-5">
+                        <h6>HMI Reçeteleri</h6>
+                        @if (isLoading)
+                        {
+                            <p><em>Yükleniyor...</em></p>
+                        }
+                        else if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+                        else if (hmiRecipes != null)
+                        {
+                            <ul class="list-group">
+                                @foreach (var file in hmiRecipes)
+                                {
+                                    <li class="list-group-item">@file</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+
+@code {
+    [Parameter] public Machine Machine { get; set; }
+    [Parameter] public List<ScadaRecipe> LocalRecipes { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private List<string>? hmiRecipes;
+    private string? errorMessage;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            hmiRecipes = await ScadaDataService.GetHmiRecipesAsync(Machine.Id);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Bir hata oluştu: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task Close() => await OnClose.InvokeAsync();
+}
