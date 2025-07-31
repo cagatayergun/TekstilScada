@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TekstilScada.WebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4c7eb7be32ecbc7e6960f7468f38663492b08f1b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+591caa15ed9099059559feccbb58b9bfc4a02da6")]
 [assembly: System.Reflection.AssemblyProductAttribute("TekstilScada.WebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TekstilScada.WebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
