@@ -33,8 +33,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
-                "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj"
+              "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
+                "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj"
               }
             }
           }
@@ -82,14 +82,14 @@
         }
       }
     },
-    "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
+    "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj",
+        "projectUniqueName": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj",
         "projectName": "TekstilScada.Core",
-        "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj",
+        "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj",
         "packagesPath": "C:\\Users\\BestYazılım\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\obj\\",
+        "outputPath": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -3274,8 +3274,8 @@
     },
     "TekstilScada.Core/1.0.0": {
       "type": "project",
-      "path": "../../TekstilScada/TekstilScada.Core/TekstilScada.Core.csproj",
-      "msbuildProject": "../../TekstilScada/TekstilScada.Core/TekstilScada.Core.csproj"
+      "path": "../TekstilScada/TekstilScada.Core/TekstilScada.Core.csproj",
+      "msbuildProject": "../TekstilScada/TekstilScada.Core/TekstilScada.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3317,8 +3317,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
-              "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj"
+            "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj": {
+              "projectPath": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada\\TekstilScada.Core\\TekstilScada.Core.csproj"
             }
           }
         }

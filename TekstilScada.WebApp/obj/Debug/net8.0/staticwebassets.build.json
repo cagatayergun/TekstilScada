@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OPLzGcM/Zinrv+9xhfvfl4jATobcz+s71vmg6Toka5k=",
+  "Hash": "jxwxl6CiIlWDuULAvzfwwSoU91DNz5+vw0PaAn1+x44=",
   "Source": "TekstilScada.WebApp",
   "BasePath": "_content/TekstilScada.WebApp",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "TekstilScada.WebApp\\wwwroot",
       "Source": "TekstilScada.WebApp",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\TekstilScada.WebApp.styles.css",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\TekstilScada.WebApp.styles.css",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "TekstilScada.WebApp.styles.css",
       "AssetKind": "All",
@@ -33,13 +33,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\TekstilScada.WebApp.styles.css"
+      "OriginalItemSpec": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\bundle\\TekstilScada.WebApp.styles.css"
     },
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TekstilScada.WebApp.bundle.scp.css",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TekstilScada.WebApp.bundle.scp.css",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "TekstilScada.WebApp.bundle.scp.css",
       "AssetKind": "All",
@@ -52,13 +52,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TekstilScada.WebApp.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TekstilScada.WebApp.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\app.css",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\app.css",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "app.css",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\favicon.png",
+      "Identity": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\favicon.png",
       "SourceId": "TekstilScada.WebApp",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\TekstilScada.WebApp\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\BestYazılım\\source\\repos\\scada_çözüm\\TekstilScada.WebApp\\wwwroot\\",
       "BasePath": "_content/TekstilScada.WebApp",
       "RelativePath": "favicon.png",
       "AssetKind": "All",

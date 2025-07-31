@@ -1,12 +1,10 @@
-﻿// UI/FtpSync_Form.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using TekstilScada.Core;
 using TekstilScada.Models;
 using TekstilScada.Repositories;
 using TekstilScada.Services;
@@ -17,239 +15,193 @@ namespace TekstilScada.UI
     {
         private readonly MachineRepository _machineRepository;
         private readonly RecipeRepository _recipeRepository;
-        private FtpService _ftpService;
+        private readonly FtpTransferService _transferService;
 
         public FtpSync_Form(MachineRepository machineRepo, RecipeRepository recipeRepo)
         {
             InitializeComponent();
             _machineRepository = machineRepo;
             _recipeRepository = recipeRepo;
-
-            this.Load += FtpSync_Form_Load;
-            cmbMachines.SelectedIndexChanged += CmbMachines_SelectedIndexChanged;
-            btnRefreshHmiList.Click += BtnRefreshHmiList_Click;
-            btnSendToHmi.Click += BtnSendToHmi_Click;
-            btnGetFromHmi.Click += BtnGetFromHmi_Click;
+            _transferService = FtpTransferService.Instance; // Singleton servisi al
         }
 
         private void FtpSync_Form_Load(object sender, EventArgs e)
         {
-            var machines = _machineRepository.GetAllEnabledMachines()
-                .Where(m => m.MachineType == "BYMakinesi").ToList();
+            // Makineleri ve reçeteleri yükle
+            LoadMachines();
+            LoadLocalRecipes();
 
+            // İlerleme tablosunu ayarla
+            SetupTransfersGrid();
+
+            // Mevcut işleri listele ve ilerleme durumlarını dinlemeye başla
+            dgvTransfers.DataSource = _transferService.Jobs;
+            _transferService.Jobs.ListChanged += Jobs_ListChanged;
+        }
+
+        private void LoadMachines()
+        {
+            // Sadece FTP kullanıcı adı tanımlanmış makineleri listele
+            var machines = _machineRepository.GetAllEnabledMachines()
+                .Where(m => !string.IsNullOrEmpty(m.FtpUsername)).ToList();
             cmbMachines.DataSource = machines;
             cmbMachines.DisplayMember = "DisplayInfo";
             cmbMachines.ValueMember = "Id";
-
-            LoadLocalRecipes();
-        }
-
-        private void CmbMachines_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            RefreshHmiList();
         }
 
         private void LoadLocalRecipes()
         {
-            try
-            {
-                var recipes = _recipeRepository.GetAllRecipes();
-                lstLocalRecipes.DataSource = recipes;
-                lstLocalRecipes.DisplayMember = "RecipeName";
-                lstLocalRecipes.ValueMember = "Id";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Yerel reçeteler yüklenemedi: {ex.Message}", "Hata");
-            }
+            lstLocalRecipes.DataSource = _recipeRepository.GetAllRecipes();
+            lstLocalRecipes.DisplayMember = "RecipeName";
+            lstLocalRecipes.ValueMember = "Id";
         }
 
-        private async void RefreshHmiList()
+        private async void LoadHmiRecipes()
         {
             var selectedMachine = cmbMachines.SelectedItem as Machine;
-            if (selectedMachine == null || string.IsNullOrEmpty(selectedMachine.IpAddress))
+            if (selectedMachine == null)
             {
                 lstHmiRecipes.DataSource = null;
                 return;
             }
-            _ftpService = new FtpService(selectedMachine.VncAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
-          //  _ftpService = new FtpService(selectedMachine.IpAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
 
-            SetBusyState(true, "HMI reçeteleri listeleniyor...");
-            lstHmiRecipes.DataSource = null;
-
-            try///flash/recipe
+            // YENİ: Makinenin FTP bilgilerinin dolu olup olmadığını kontrol et
+            if (string.IsNullOrEmpty(selectedMachine.IpAddress) || string.IsNullOrEmpty(selectedMachine.FtpUsername))
             {
-                var files = await _ftpService.ListDirectoryAsync("/");
+                MessageBox.Show("Seçilen makine için FTP IP adresi veya kullanıcı adı tanımlanmamış.", "Eksik Bilgi");
+                lstHmiRecipes.DataSource = null;
+                return;
+            }
+
+            btnRefreshHmi.Enabled = false;
+            lstHmiRecipes.DataSource = new List<string> { "Yükleniyor..." };
+
+            try
+            {
+                var ftpService = new FtpService(selectedMachine.IpAddress, selectedMachine.FtpUsername, selectedMachine.FtpPassword);
+                var files = await ftpService.ListDirectoryAsync("/");
                 var recipeFiles = files
-    .Where(f => f.StartsWith("XPR", StringComparison.OrdinalIgnoreCase) && f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-    .OrderBy(f => f)
-    .ToList();
+                    .Where(f => f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(f => f)
+                    .ToList();
                 lstHmiRecipes.DataSource = recipeFiles;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"HMI reçeteleri listelenemedi: {ex.Message}", "FTP Hatası");
+                // YENİ: Hata mesajını daha anlaşılır hale getir
+                string errorMessage = $"'{selectedMachine.MachineName}' makinesinin FTP sunucusuna bağlanılamadı.\n\n" +
+                                      "Olası Nedenler:\n" +
+                                      "- Makine kapalı veya ağa bağlı değil.\n" +
+                                      "- FTP kullanıcı adı veya şifresi yanlış.\n" +
+                                      "- Ağ güvenlik duvarı bağlantıyı engelliyor.\n\n" +
+                                      $"Teknik Detay: {ex.Message}";
+                MessageBox.Show(errorMessage, "FTP Bağlantı Hatası");
+                lstHmiRecipes.DataSource = null;
             }
             finally
             {
-                SetBusyState(false);
+                btnRefreshHmi.Enabled = true;
             }
         }
 
-        private void BtnRefreshHmiList_Click(object sender, EventArgs e)
+        private void SetupTransfersGrid()
         {
-            RefreshHmiList();
+            dgvTransfers.AutoGenerateColumns = false;
+            dgvTransfers.Columns.Clear();
+
+            dgvTransfers.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MakineAdi", HeaderText = "Makine", FillWeight = 150 });
+            dgvTransfers.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ReceteAdi", HeaderText = "Reçete/Dosya", FillWeight = 200 });
+            dgvTransfers.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "IslemTipi", HeaderText = "İşlem" });
+            dgvTransfers.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Durum", HeaderText = "Durum" });
+            dgvTransfers.Columns.Add(new DataGridViewProgressBarColumn { DataPropertyName = "Ilerleme", HeaderText = "İlerleme" });
+            dgvTransfers.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "HataMesaji", HeaderText = "Hata", FillWeight = 250 });
         }
 
-        private async void BtnSendToHmi_Click(object sender, EventArgs e)
+        private void btnSend_Click(object sender, EventArgs e)
         {
-            if (lstLocalRecipes.SelectedItems.Count == 0)
+            var selectedRecipes = lstLocalRecipes.SelectedItems.Cast<ScadaRecipe>().ToList();
+            var selectedMachine = cmbMachines.SelectedItem as Machine;
+
+            if (!selectedRecipes.Any() || selectedMachine == null)
             {
-                MessageBox.Show("Lütfen HMI'a göndermek için en az bir SCADA reçetesi seçin.", "Uyarı");
+                MessageBox.Show("Lütfen en az bir reçete ve bir hedef makine seçin.", "Uyarı");
                 return;
             }
-            if (_ftpService == null)
+            _transferService.QueueSendJobs(selectedRecipes, selectedMachine);
+        }
+
+        private void btnReceive_Click(object sender, EventArgs e)
+        {
+            var selectedFiles = lstHmiRecipes.SelectedItems.Cast<string>().ToList();
+            var selectedMachine = cmbMachines.SelectedItem as Machine;
+
+            if (!selectedFiles.Any() || selectedMachine == null)
             {
-                MessageBox.Show("Lütfen geçerli bir makine seçin.", "Uyarı");
+                MessageBox.Show("Lütfen en az bir HMI dosyası ve bir kaynak makine seçin.", "Uyarı");
                 return;
             }
+            _transferService.QueueReceiveJobs(selectedFiles, selectedMachine);
+        }
 
-            string input = ShowInputDialog($"Seçilen {lstLocalRecipes.SelectedItems.Count} adet reçete için başlangıç HMI numarasını girin (1-100):");
-            if (!int.TryParse(input, out int startSlot) || startSlot < 1 || startSlot > 100)
+        private void cmbMachines_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadHmiRecipes();
+        }
+
+        private void btnRefreshHmi_Click(object sender, EventArgs e)
+        {
+            LoadHmiRecipes();
+        }
+
+        private void Jobs_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            if (this.IsDisposed || !this.IsHandleCreated) return;
+
+            if (dgvTransfers.InvokeRequired)
             {
-                if (!string.IsNullOrEmpty(input)) MessageBox.Show("Geçersiz başlangıç numarası.", "Hata");
-                return;
+                dgvTransfers.Invoke(new Action(() => dgvTransfers.Refresh()));
             }
-
-            SetBusyState(true, "Reçeteler HMI'a gönderiliyor...");
-            progressBar.Maximum = lstLocalRecipes.SelectedItems.Count;
-            progressBar.Value = 0;
-
-            try
+            else
             {
-                int currentSlot = startSlot;
-                foreach (ScadaRecipe selectedRecipeInfo in lstLocalRecipes.SelectedItems)
-                {
-                    if (currentSlot > 100)
-                    {
-                        MessageBox.Show("Başlangıç numarası nedeniyle bazı reçeteler 100. yuvayı aşıyor. Sadece sığanlar gönderilecek.", "Uyarı");
-                        break;
-                    }
-
-                    lblStatus.Text = $"'{selectedRecipeInfo.RecipeName}' gönderiliyor (RECIPE_{currentSlot}.csv)...";
-
-                    // Tam reçete verisini veritabanından çek
-                    var fullRecipe = _recipeRepository.GetRecipeById(selectedRecipeInfo.Id);
-                    string csvContent = RecipeCsvConverter.ToCsv(fullRecipe);
-                    string remoteFileName = $"/RECIPE_{currentSlot}.csv";
-
-                    await _ftpService.UploadFileAsync(remoteFileName, csvContent);
-
-                    progressBar.Value++;
-                    currentSlot++;
-                }
-
-                MessageBox.Show("Seçilen reçeteler başarıyla HMI'a gönderildi.", "İşlem Tamamlandı");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Reçete gönderimi sırasında bir hata oluştu: {ex.Message}", "FTP Hatası");
-            }
-            finally
-            {
-                SetBusyState(false);
-                RefreshHmiList(); // HMI listesini güncelle
+                dgvTransfers.Refresh();
             }
         }
 
-        private async void BtnGetFromHmi_Click(object sender, EventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (lstHmiRecipes.SelectedItems.Count == 0)
-            {
-                MessageBox.Show("Lütfen SCADA'ya almak için en az bir HMI reçetesi seçin.", "Uyarı");
-                return;
-            }
-            if (_ftpService == null)
-            {
-                MessageBox.Show("Lütfen geçerli bir makine seçin.", "Uyarı");
-                return;
-            }
-
-            var result = MessageBox.Show($"{lstHmiRecipes.SelectedItems.Count} adet reçete SCADA veritabanına yeni olarak kaydedilecek. Onaylıyor musunuz?", "Onay", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.No) return;
-
-            SetBusyState(true, "Reçeteler HMI'dan alınıyor...");
-            progressBar.Maximum = lstHmiRecipes.SelectedItems.Count;
-            progressBar.Value = 0;
-            var newRecipeNames = new StringBuilder();
-
-            try
-            {
-                foreach (string selectedFile in lstHmiRecipes.SelectedItems)
-                {
-                    lblStatus.Text = $"'{selectedFile}' alınıyor...";
-                    string remoteFilePath = $"/{selectedFile}";
-                    string csvContent = await _ftpService.DownloadFileAsync(remoteFilePath);
-
-                    string newRecipeName = $"HMI_{Path.GetFileNameWithoutExtension(selectedFile)}_{DateTime.Now:yyMMddHHmm}";
-                    ScadaRecipe newRecipe = RecipeCsvConverter.ToRecipe(csvContent, newRecipeName);
-
-                    _recipeRepository.SaveRecipe(newRecipe);
-                    newRecipeNames.AppendLine(newRecipeName);
-                    progressBar.Value++;
-                }
-
-                MessageBox.Show($"İşlem tamamlandı. Aşağıdaki yeni reçeteler veritabanına kaydedildi:\n\n{newRecipeNames}", "Başarılı");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Reçete alımı sırasında bir hata oluştu: {ex.Message}", "FTP Hatası");
-            }
-            finally
-            {
-                SetBusyState(false);
-                LoadLocalRecipes(); // Yerel listeyi güncelle
-            }
+            _transferService.Jobs.ListChanged -= Jobs_ListChanged;
+            base.OnFormClosing(e);
         }
+    }
 
-        private void SetBusyState(bool isBusy, string statusText = "Hazır.")
+    // DataGridView için özel ProgressBar kolonu
+    public class DataGridViewProgressBarColumn : DataGridViewTextBoxColumn
+    {
+        public DataGridViewProgressBarColumn()
         {
-            if (this.InvokeRequired)
+            this.CellTemplate = new DataGridViewProgressBarCell();
+        }
+    }
+
+    public class DataGridViewProgressBarCell : DataGridViewTextBoxCell
+    {
+        protected override void Paint(Graphics g, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates cellState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+        {
+            base.Paint(g, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts & ~DataGridViewPaintParts.ContentForeground);
+
+            int progressVal = (value == null) ? 0 : (int)value;
+            float percentage = ((float)progressVal / 100.0f);
+
+            if (percentage > 0.0)
             {
-                this.Invoke(new Action(() => SetBusyState(isBusy, statusText)));
-                return;
+                g.FillRectangle(new SolidBrush(Color.FromArgb(180, 220, 180)), cellBounds.X + 2, cellBounds.Y + 2, Convert.ToInt32((percentage * cellBounds.Width - 4)), cellBounds.Height - 4);
             }
 
-            lblStatus.Text = statusText;
-            progressBar.Visible = isBusy;
-            if (!isBusy) progressBar.Value = 0;
-
-            // Panelleri ve butonları kilitle/aç
-            pnlTop.Enabled = !isBusy;
-            splitContainer1.Enabled = !isBusy;
-        }
-
-        public static string ShowInputDialog(string text)
-        {
-            Form prompt = new Form()
-            {
-                Width = 500,
-                Height = 180,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = "Giriş Gerekli",
-                StartPosition = FormStartPosition.CenterScreen
-            };
-            Label textLabel = new Label() { Left = 20, Top = 20, Text = text, Width = 450 };
-            NumericUpDown inputBox = new NumericUpDown() { Left = 20, Top = 50, Width = 440, Minimum = 1, Maximum = 100 };
-            Button confirmation = new Button() { Text = "Tamam", Left = 360, Width = 100, Top = 90, DialogResult = DialogResult.OK };
-            confirmation.Click += (sender, e) => { prompt.Close(); };
-            prompt.Controls.Add(inputBox);
-            prompt.Controls.Add(confirmation);
-            prompt.Controls.Add(textLabel);
-            prompt.AcceptButton = confirmation;
-
-            return prompt.ShowDialog() == DialogResult.OK ? inputBox.Value.ToString() : "";
+            string text = progressVal.ToString() + "%";
+            SizeF textSize = g.MeasureString(text, cellStyle.Font);
+            float textX = cellBounds.X + (cellBounds.Width - textSize.Width) / 2;
+            float textY = cellBounds.Y + (cellBounds.Height - textSize.Height) / 2;
+            g.DrawString(text, cellStyle.Font, Brushes.Black, textX, textY);
         }
     }
 }

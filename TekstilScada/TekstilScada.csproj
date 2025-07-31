@@ -39,7 +39,7 @@
 
 	<ItemGroup>
 		<Reference Include="VncSharpCore">
-			<HintPath>..\..\..\Downloads\VncSharpCore.dll</HintPath>
+			<HintPath>..\..\..\Lib\VncSharpCore.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
